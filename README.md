@@ -1,8 +1,10 @@
+# Notice: Not ready for production. I will make documented well soon.
+
 # Ubs Sample Backend
 
 ## Synopsis
 
-The simple backend template for MONA platform applications. This project contains an endpoint that requires    
+The simple backend template for MONA platform applications. This project contains an endpoint that requires
 
 ## Requirements for begin
 
@@ -13,13 +15,14 @@ The simple backend template for MONA platform applications. This project contain
 ## Start the application
 
 - Run the docker-compose.yml file in the infrastructure directory
-    ```bash
-    cd infrastructure
-    docker compose up -d
-    ```
+  ```bash
+  cd infrastructure
+  docker compose up -d
+  ```
 - Rename the `sample.env` file as `.env`
-- Run `npx nx serve ubs-sample-backend-mona` to start the development server. 
+- Run `npx nx serve ubs-sample-backend-mona` to start the development server.
 - To test the environment. Firstly login in ubs-users and then, send the simple request that header includes the token
+
 ```bash
 curl --location 'http://localhost:3000/api/auth' \
 --header 'Content-Type: application/json' \
@@ -44,11 +47,10 @@ curl --location 'http://localhost:3169/api' \
 # }
 
 ```
+
 - Mongoose and etc. is preinstalled. to do something with mongodb, please refer [the official documentation from nestjs](https://docs.nestjs.com/techniques/mongodb)
 
 Happy coding!
-
-
 
 ## Build for production
 

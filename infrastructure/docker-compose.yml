@@ -1,5 +1,19 @@
 version: '3.5'
 services:
+  ubs-users:
+    image: 'hcangunduz/ubs-users'
+    ports:
+      - 3000:3000
+    environment:
+      - NX_MICROSERVICE_TYPE=KAFKA
+      - NX_KAFKA_URL=kafka:9092
+      - NX_MONGO_URL=my-mongodb:27017
+      - NX_MONGO_DBNAME=ubs_users
+      - NX_MONGO_USERNAME=admin
+      - NX_MONGO_PASSWORD=admin
+      - NX_SECRET_JWT=23ac43b5e6f2a12
+      - NX_SECRET_PW=secret
+
   zookeeper:
     image: 'docker.io/bitnami/zookeeper:3-debian-10'
     ports:
@@ -52,14 +66,13 @@ services:
       - ./mongo-entrypoint:/docker-entrypoint-initdb.d
       - mongodb:/data/db
       - mongoconfig:/data/configdb
-    networks:
-      - mongo_net
+    # networks:
+    #   - mongo_net
 
 volumes:
   # default dir on Ubuntu: /var/lib/docker/volumes
   mongodb:
   mongoconfig:
-
-networks:
-  mongo_net:
-    driver: bridge
+# networks:
+#   mongo_net:
+#     driver: bridge
