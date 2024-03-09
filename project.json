@@ -1,0 +1,24 @@
+{
+  "name": "ubs-sample-backend-mona",
+  "$schema": "node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "src",
+  "projectType": "application",
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "ubs-sample-backend-mona:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "ubs-sample-backend-mona:build:development"
+        },
+        "production": {
+          "buildTarget": "ubs-sample-backend-mona:build:production"
+        }
+      }
+    }
+  },
+  "tags": []
+}
