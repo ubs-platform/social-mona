@@ -1,0 +1,104 @@
+[hls @ 0x55b9e9f02280] Opening '/home/huseyin/İndirilenler/144p.h264.mp4.m3u8' for reading
+[hls @ 0x55b9e9f02280] parse_playlist error Böyle bir dosya ya da dizin yok [/home/huseyin/İndirilenler/144p.h264.mp4.m3u8]
+[hls @ 0x55b9e9f02280] Opening '/home/huseyin/İndirilenler/240p.h264.mp4.m3u8' for reading
+[hls @ 0x55b9e9f02280] parse_playlist error Böyle bir dosya ya da dizin yok [/home/huseyin/İndirilenler/240p.h264.mp4.m3u8]
+[hls @ 0x55b9e9f02280] Opening '/home/huseyin/İndirilenler/480p.h264.mp4.m3u8' for reading
+[hls @ 0x55b9e9f02280] parse_playlist error Böyle bir dosya ya da dizin yok [/home/huseyin/İndirilenler/480p.h264.mp4.m3u8]
+[hls @ 0x55b9e9f02280] Opening '/home/huseyin/İndirilenler/720p.h264.mp4.m3u8' for reading
+[hls @ 0x55b9e9f02280] Skip ('#EXT-X-ALLOW-CACHE:YES')
+[hls @ 0x55b9e9f02280] Skip ('#EXT-X-VERSION:3')
+[hls @ 0x55b9e9f02280] Empty segment [/home/huseyin/İndirilenler/144p.h264.mp4.m3u8]
+[hls @ 0x55b9e9f02280] Empty segment [/home/huseyin/İndirilenler/240p.h264.mp4.m3u8]
+[hls @ 0x55b9e9f02280] Empty segment [/home/huseyin/İndirilenler/480p.h264.mp4.m3u8]
+[hls @ 0x55b9e9f02280] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-1-v1-a1.ts' for reading
+[hls @ 0x55b9e9f02280] Failed to open segment 1 of playlist 3
+[hls @ 0x55b9e9f02280] Segment 1 of playlist 3 failed too many times, skipping
+[hls @ 0x55b9e9f02280] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-2-v1-a1.ts' for reading
+[hls @ 0x55b9e9f02280] Failed to open segment 2 of playlist 3
+[hls @ 0x55b9e9f02280] Segment 2 of playlist 3 failed too many times, skipping
+[hls @ 0x55b9e9f02280] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-3-v1-a1.ts' for reading
+[hls @ 0x55b9e9f02280] Failed to open segment 3 of playlist 3
+[hls @ 0x55b9e9f02280] Segment 3 of playlist 3 failed too many times, skipping
+[hls @ 0x55b9e9f02280] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-4-v1-a1.ts' for reading
+[hls @ 0x55b9e9f02280] Failed to open segment 4 of playlist 3
+[hls @ 0x55b9e9f02280] Segment 4 of playlist 3 failed too many times, skipping
+[hls @ 0x55b9e9f02280] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-5-v1-a1.ts' for reading
+[hls @ 0x55b9e9f02280] Failed to open segment 5 of playlist 3
+[hls @ 0x55b9e9f02280] Segment 5 of playlist 3 failed too many times, skipping
+[hls @ 0x55b9e9f02280] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-6-v1-a1.ts' for reading
+[hls @ 0x55b9e9f02280] Failed to open segment 6 of playlist 3
+[hls @ 0x55b9e9f02280] Segment 6 of playlist 3 failed too many times, skipping
+[hls @ 0x55b9e9f02280] Error when loading first segment '/home/huseyin/İndirilenler/720p.h264.mp4/seg-1-v1-a1.ts'
+[hls @ 0x55b9e9e67680] Opening '/home/huseyin/İndirilenler/144p.h264.mp4.m3u8' for reading
+[hls @ 0x55b9e9e67680] parse_playlist error Böyle bir dosya ya da dizin yok [/home/huseyin/İndirilenler/144p.h264.mp4.m3u8]
+[hls @ 0x55b9e9e67680] Opening '/home/huseyin/İndirilenler/240p.h264.mp4.m3u8' for reading
+[hls @ 0x55b9e9e67680] parse_playlist error Böyle bir dosya ya da dizin yok [/home/huseyin/İndirilenler/240p.h264.mp4.m3u8]
+[hls @ 0x55b9e9e67680] Opening '/home/huseyin/İndirilenler/480p.h264.mp4.m3u8' for reading
+[hls @ 0x55b9e9e67680] parse_playlist error Böyle bir dosya ya da dizin yok [/home/huseyin/İndirilenler/480p.h264.mp4.m3u8]
+[hls @ 0x55b9e9e67680] Opening '/home/huseyin/İndirilenler/720p.h264.mp4.m3u8' for reading
+[hls @ 0x55b9e9e67680] Skip ('#EXT-X-ALLOW-CACHE:YES')
+[hls @ 0x55b9e9e67680] Skip ('#EXT-X-VERSION:3')
+[hls @ 0x55b9e9e67680] Empty segment [/home/huseyin/İndirilenler/144p.h264.mp4.m3u8]
+[hls @ 0x55b9e9e67680] Empty segment [/home/huseyin/İndirilenler/240p.h264.mp4.m3u8]
+[hls @ 0x55b9e9e67680] Empty segment [/home/huseyin/İndirilenler/480p.h264.mp4.m3u8]
+[hls @ 0x55b9e9e67680] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-1-v1-a1.ts' for reading
+[hls @ 0x55b9e9e67680] Failed to open segment 1 of playlist 3
+[hls @ 0x55b9e9e67680] Segment 1 of playlist 3 failed too many times, skipping
+[hls @ 0x55b9e9e67680] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-2-v1-a1.ts' for reading
+[hls @ 0x55b9e9e67680] Failed to open segment 2 of playlist 3
+[hls @ 0x55b9e9e67680] Segment 2 of playlist 3 failed too many times, skipping
+[hls @ 0x55b9e9e67680] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-3-v1-a1.ts' for reading
+[hls @ 0x55b9e9e67680] Failed to open segment 3 of playlist 3
+[hls @ 0x55b9e9e67680] Segment 3 of playlist 3 failed too many times, skipping
+[hls @ 0x55b9e9e67680] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-4-v1-a1.ts' for reading
+[hls @ 0x55b9e9e67680] Failed to open segment 4 of playlist 3
+[hls @ 0x55b9e9e67680] Segment 4 of playlist 3 failed too many times, skipping
+[hls @ 0x55b9e9e67680] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-5-v1-a1.ts' for reading
+[hls @ 0x55b9e9e67680] Failed to open segment 5 of playlist 3
+[hls @ 0x55b9e9e67680] Segment 5 of playlist 3 failed too many times, skipping
+[hls @ 0x55b9e9e67680] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-6-v1-a1.ts' for reading
+[hls @ 0x55b9e9e67680] Failed to open segment 6 of playlist 3
+[hls @ 0x55b9e9e67680] Segment 6 of playlist 3 failed too many times, skipping
+[hls @ 0x55b9e9e67680] Error when loading first segment '/home/huseyin/İndirilenler/720p.h264.mp4/seg-1-v1-a1.ts'
+[hls @ 0x55b9e9e58500] Skip ('#EXT-X-ALLOW-CACHE:YES')
+[hls @ 0x55b9e9e58500] Skip ('#EXT-X-VERSION:3')
+[hls @ 0x55b9e9e58500] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-1-v1-a1.ts' for reading
+[hls @ 0x55b9e9e58500] Failed to open segment 1 of playlist 0
+[hls @ 0x55b9e9e58500] Segment 1 of playlist 0 failed too many times, skipping
+[hls @ 0x55b9e9e58500] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-2-v1-a1.ts' for reading
+[hls @ 0x55b9e9e58500] Failed to open segment 2 of playlist 0
+[hls @ 0x55b9e9e58500] Segment 2 of playlist 0 failed too many times, skipping
+[hls @ 0x55b9e9e58500] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-3-v1-a1.ts' for reading
+[hls @ 0x55b9e9e58500] Failed to open segment 3 of playlist 0
+[hls @ 0x55b9e9e58500] Segment 3 of playlist 0 failed too many times, skipping
+[hls @ 0x55b9e9e58500] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-4-v1-a1.ts' for reading
+[hls @ 0x55b9e9e58500] Failed to open segment 4 of playlist 0
+[hls @ 0x55b9e9e58500] Segment 4 of playlist 0 failed too many times, skipping
+[hls @ 0x55b9e9e58500] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-5-v1-a1.ts' for reading
+[hls @ 0x55b9e9e58500] Failed to open segment 5 of playlist 0
+[hls @ 0x55b9e9e58500] Segment 5 of playlist 0 failed too many times, skipping
+[hls @ 0x55b9e9e58500] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-6-v1-a1.ts' for reading
+[hls @ 0x55b9e9e58500] Failed to open segment 6 of playlist 0
+[hls @ 0x55b9e9e58500] Segment 6 of playlist 0 failed too many times, skipping
+[hls @ 0x55b9e9e58500] Error when loading first segment '/home/huseyin/İndirilenler/720p.h264.mp4/seg-1-v1-a1.ts'
+[hls @ 0x55b9e9e58500] Skip ('#EXT-X-ALLOW-CACHE:YES')
+[hls @ 0x55b9e9e58500] Skip ('#EXT-X-VERSION:3')
+[hls @ 0x55b9e9e58500] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-1-v1-a1.ts' for reading
+[hls @ 0x55b9e9e58500] Failed to open segment 1 of playlist 0
+[hls @ 0x55b9e9e58500] Segment 1 of playlist 0 failed too many times, skipping
+[hls @ 0x55b9e9e58500] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-2-v1-a1.ts' for reading
+[hls @ 0x55b9e9e58500] Failed to open segment 2 of playlist 0
+[hls @ 0x55b9e9e58500] Segment 2 of playlist 0 failed too many times, skipping
+[hls @ 0x55b9e9e58500] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-3-v1-a1.ts' for reading
+[hls @ 0x55b9e9e58500] Failed to open segment 3 of playlist 0
+[hls @ 0x55b9e9e58500] Segment 3 of playlist 0 failed too many times, skipping
+[hls @ 0x55b9e9e58500] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-4-v1-a1.ts' for reading
+[hls @ 0x55b9e9e58500] Failed to open segment 4 of playlist 0
+[hls @ 0x55b9e9e58500] Segment 4 of playlist 0 failed too many times, skipping
+[hls @ 0x55b9e9e58500] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-5-v1-a1.ts' for reading
+[hls @ 0x55b9e9e58500] Failed to open segment 5 of playlist 0
+[hls @ 0x55b9e9e58500] Segment 5 of playlist 0 failed too many times, skipping
+[hls @ 0x55b9e9e58500] Opening '/home/huseyin/İndirilenler/720p.h264.mp4/seg-6-v1-a1.ts' for reading
+[hls @ 0x55b9e9e58500] Failed to open segment 6 of playlist 0
+[hls @ 0x55b9e9e58500] Segment 6 of playlist 0 failed too many times, skipping
+[hls @ 0x55b9e9e58500] Error when loading first segment '/home/huseyin/İndirilenler/720p.h264.mp4/seg-1-v1-a1.ts'
