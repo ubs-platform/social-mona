@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "nx serve",
-    "build": "nx build",
-    "test": "nx test"
+    "start": "nx serve --inspect",
+    "build": "nx build --skip-nx-cache",
+    "test": "nx test",
+    "build-publish": "docker build --tag your-app-docker-name . && docker push your-app-docker-name:latest"
   },
   "private": true,
   "dependencies": {
