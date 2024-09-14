@@ -9,8 +9,8 @@ import {
   EmailTemplate,
   EmailTemplateSchema,
 } from './model/email-template.model';
-import { EmailTemplateController } from './controller/email-template.controller';
-import { EmailTemplateService } from './service/email-template.service';
+import { ClientsModule } from '@nestjs/microservices';
+import { getMicroserviceConnection } from '@ubs-platform/nest-microservice-setup-util';
 
 @Module({
   imports: [
@@ -23,11 +23,18 @@ import { EmailTemplateService } from './service/email-template.service';
         dbName: process.env.NX_MONGO_DBNAME || 'ubs_users',
       }
     ),
+
     MongooseModule.forFeature([
       { name: EmailTemplate.name, schema: EmailTemplateSchema },
     ]),
+    ClientsModule.register([
+      {
+        name: 'KafkaClient',
+        ...getMicroserviceConnection(''),
+      },
+    ]),
   ],
-  controllers: [AppController, EmailTemplateController],
-  providers: [AppService, EmailTemplateService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
