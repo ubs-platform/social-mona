@@ -5,12 +5,14 @@ import { AppService } from './app.service';
 import { BackendJwtUtilsModule } from '@ubs-platform/users-mona-microservice-helper';
 import { Mongoose } from 'mongoose';
 import { MongooseModule } from '@nestjs/mongoose';
-import {
-  EmailTemplate,
-  EmailTemplateSchema,
-} from './model/email-template.model';
+// import {
+//   EmailTemplate,
+//   EmailTemplateSchema,
+// } from './model/email-template.model';
 import { ClientsModule } from '@nestjs/microservices';
 import { getMicroserviceConnection } from '@ubs-platform/nest-microservice-setup-util';
+import { CommentSchema } from './model/comment';
+import { Reaction, ReactionSchema } from './model/reaction';
 
 @Module({
   imports: [
@@ -25,7 +27,9 @@ import { getMicroserviceConnection } from '@ubs-platform/nest-microservice-setup
     ),
 
     MongooseModule.forFeature([
-      { name: EmailTemplate.name, schema: EmailTemplateSchema },
+      // { name: EmailTemplate.name, schema: EmailTemplateSchema },
+      { name: Comment.name, schema: CommentSchema },
+      { name: Reaction.name, schema: ReactionSchema },
     ]),
     ClientsModule.register([
       {
