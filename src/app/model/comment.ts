@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema()
-export class Comment {
+export class SocialComment {
   _id: String;
 
   @Prop(String)
@@ -29,7 +29,7 @@ export class Comment {
   editCount: Number;
 
   @Prop(String)
-  comment: String;
+  textContent: String;
 }
 
-export const CommentSchema = SchemaFactory.createForClass(Comment);
+export const CommentSchema = SchemaFactory.createForClass(SocialComment);

@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { BackendJwtUtilsModule } from '@ubs-platform/users-mona-microservice-helper';
 import { Mongoose } from 'mongoose';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -13,6 +11,8 @@ import { ClientsModule } from '@nestjs/microservices';
 import { getMicroserviceConnection } from '@ubs-platform/nest-microservice-setup-util';
 import { CommentSchema } from './model/comment';
 import { Reaction, ReactionSchema } from './model/reaction';
+import { CommentController } from './controller/comment.controller';
+import { CommentService } from './service/comment.service';
 
 @Module({
   imports: [
@@ -38,7 +38,7 @@ import { Reaction, ReactionSchema } from './model/reaction';
       },
     ]),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [CommentController],
+  providers: [CommentService],
 })
 export class AppModule {}
