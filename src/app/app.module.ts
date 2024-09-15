@@ -9,7 +9,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 // } from './model/email-template.model';
 import { ClientsModule } from '@nestjs/microservices';
 import { getMicroserviceConnection } from '@ubs-platform/nest-microservice-setup-util';
-import { CommentSchema } from './model/comment';
+import { SocialCommentSchema, SocialComment } from './model/comment';
 import { Reaction, ReactionSchema } from './model/reaction';
 import { CommentController } from './controller/comment.controller';
 import { CommentService } from './service/comment.service';
@@ -28,7 +28,7 @@ import { CommentService } from './service/comment.service';
 
     MongooseModule.forFeature([
       // { name: EmailTemplate.name, schema: EmailTemplateSchema },
-      { name: Comment.name, schema: CommentSchema },
+      { name: SocialComment.name, schema: SocialCommentSchema },
       { name: Reaction.name, schema: ReactionSchema },
     ]),
     ClientsModule.register([

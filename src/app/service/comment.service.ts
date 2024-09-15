@@ -18,7 +18,7 @@ import { UserAuthBackendDTO } from '@ubs-platform/users-common';
 @Injectable()
 export class CommentService {
   constructor(
-    @Inject(Comment.name) private commentModel: Model<SocialComment>,
+    @Inject(SocialComment.name) private commentModel: Model<SocialComment>,
     @Inject(KAFKA_CLIENT) private kafkaClient: ClientKafka
   ) {}
 

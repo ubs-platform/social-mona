@@ -32,4 +32,4 @@ export class SocialComment {
   textContent: String;
 }
 
-export const CommentSchema = SchemaFactory.createForClass(SocialComment);
+export const SocialCommentSchema = SchemaFactory.createForClass(SocialComment);
