@@ -9,17 +9,15 @@ import {
   PAT_INSERT_OWNERSHIP,
 } from 'libs/const/constants';
 import { ClientKafka } from '@nestjs/microservices';
-import {
-  CommentDTO,
-  EntityOwnershipDTO,
-  UserCapability,
-} from 'libs/common/src/index';
+
 import { UserAuthBackendDTO } from '@ubs-platform/users-common';
+import { CommentDTO } from 'libs/common/src';
+import { EntityOwnershipService } from '@ubs-platform/users-mona-microservice-helper';
 @Injectable()
 export class CommentService {
   constructor(
     @Inject(SocialComment.name) private commentModel: Model<SocialComment>,
-    @Inject(KAFKA_CLIENT) private kafkaClient: ClientKafka
+    private eoService: EntityOwnershipService
   ) {}
 
   public async insertComment(
@@ -28,8 +26,10 @@ export class CommentService {
   ) {
     const commentModel = new this.commentModel();
     commentModel.textContent = commentDto.textContent;
-    commentModel.entityName = commentDto.entityName;
-    commentModel.entityId = commentDto.entityId;
+    commentModel.mainEntityName = commentDto.mainEntityName;
+    commentModel.mainEntityId = commentDto.mainEntityId;
+    commentModel.childEntityName = commentDto.childEntityName;
+    commentModel.childEntityId = commentDto.childEntityId;
     commentModel.entityGroup = commentDto.entityGroup;
     const saved = await commentModel.save();
     this.sendOwnershipForSavedComment(saved, commentDto, currentUser);
@@ -41,17 +41,10 @@ export class CommentService {
     commentDto: CommentDTO,
     currentUser: UserAuthBackendDTO
   ) {
-    this.sendOwnership({
+    this.eoService.insertOwnership({
       entityGroup: ENTITY_GROUP,
       entityName: ENTITY_NAME,
       entityId: saved._id,
-      parent: {
-        entityGroup: commentDto.entityGroup,
-        entityName: commentDto.entityName,
-        entityId: commentDto.entityId,
-      },
-      fileUploadMaxLengthBytes: '0',
-      fileUploadAllowedFormats: [],
       userCapabilities: [
         {
           userId: currentUser.id,
@@ -60,9 +53,5 @@ export class CommentService {
       ],
       overriderRoles: [],
     });
-  }
-
-  private sendOwnership(ownershipDto: EntityOwnershipDTO) {
-    this.kafkaClient.send(PAT_INSERT_OWNERSHIP, ownershipDto);
   }
 }
