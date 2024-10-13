@@ -8,10 +8,19 @@ export class SocialComment {
   entityGroup: String;
 
   @Prop(String)
-  entityName: String;
+  mainEntityName: String;
 
   @Prop(String)
-  entityId: String;
+  mainEntityId: String;
+
+  @Prop(String)
+  childEntityName: String;
+
+  @Prop(String)
+  childEntityId: String;
+
+  @Prop(String)
+  textContent: String;
 
   @Prop(String)
   byUserId: String;
@@ -27,9 +36,6 @@ export class SocialComment {
 
   @Prop({ type: Number, default: 0 })
   editCount: Number;
-
-  @Prop(String)
-  textContent: String;
 }
 
 export const SocialCommentSchema = SchemaFactory.createForClass(SocialComment);

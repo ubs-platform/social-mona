@@ -1,4 +1,5 @@
 export class CommentDTO {
+  _id: String;
   entityGroup: String;
   mainEntityName: String;
   mainEntityId: String;
