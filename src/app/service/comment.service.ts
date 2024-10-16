@@ -11,34 +11,30 @@ import {
 import { ClientKafka } from '@nestjs/microservices';
 
 import { UserAuthBackendDTO } from '@ubs-platform/users-common';
-import { CommentDTO } from 'libs/common/src';
+import { CommentAddDTO } from 'libs/common/src';
 import { EntityOwnershipService } from '@ubs-platform/users-mona-microservice-helper';
+import { CommentMapper } from '../mapper/comment.mapper';
 @Injectable()
 export class CommentService {
   constructor(
     @Inject(SocialComment.name) private commentModel: Model<SocialComment>,
-    private eoService: EntityOwnershipService
+    private eoService: EntityOwnershipService,
+    private commentMapper: CommentMapper
   ) {}
 
   public async insertComment(
-    commentDto: CommentDTO,
+    commentDto: CommentAddDTO,
     currentUser: UserAuthBackendDTO
   ) {
     const commentModel = new this.commentModel();
-    commentModel.textContent = commentDto.textContent;
-    commentModel.mainEntityName = commentDto.mainEntityName;
-    commentModel.mainEntityId = commentDto.mainEntityId;
-    commentModel.childEntityName = commentDto.childEntityName;
-    commentModel.childEntityId = commentDto.childEntityId;
-    commentModel.entityGroup = commentDto.entityGroup;
+    this.commentMapper.moveToEntity(commentModel, commentDto);
     const saved = await commentModel.save();
-    this.sendOwnershipForSavedComment(saved, commentDto, currentUser);
+    this.sendOwnershipForSavedComment(saved, currentUser);
   }
 
   private sendOwnershipForSavedComment(
     saved: import('mongoose').Document<unknown, any, SocialComment> &
       Omit<SocialComment & Required<{ _id: String }>, never>,
-    commentDto: CommentDTO,
     currentUser: UserAuthBackendDTO
   ) {
     this.eoService.insertOwnership({

@@ -3,7 +3,7 @@ import {
   CurrentUser,
   JwtAuthGuard,
 } from '@ubs-platform/users-mona-microservice-helper';
-import { CommentDTO } from 'libs/common/src';
+import { CommentAddDTO } from 'libs/common/src';
 import { CommentService } from '../service/comment.service';
 import { UserAuthBackendDTO } from '@ubs-platform/users-common';
 
@@ -13,7 +13,7 @@ export class CommentController {
   @Post('comment')
   @UseGuards(JwtAuthGuard)
   addComment(
-    @Body() comment: CommentDTO,
+    @Body() comment: CommentAddDTO,
     @CurrentUser() user: UserAuthBackendDTO
   ) {
     this.commentService.insertComment(comment, user);
