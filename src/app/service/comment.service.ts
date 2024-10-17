@@ -2,9 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { SocialComment } from '../model/comment';
 import {
-  CAPABILITY_NAME_COMMENTER,
+  CAPABILITY_NAME_OWNER,
   ENTITY_GROUP,
-  ENTITY_NAME,
+  ENTITY_NAME_COMMENTS,
   KAFKA_CLIENT,
   PAT_INSERT_OWNERSHIP,
 } from 'libs/const/constants';
@@ -39,12 +39,12 @@ export class CommentService {
   ) {
     this.eoService.insertOwnership({
       entityGroup: ENTITY_GROUP,
-      entityName: ENTITY_NAME,
+      entityName: ENTITY_NAME_COMMENTS,
       entityId: saved._id,
       userCapabilities: [
         {
           userId: currentUser.id,
-          capability: CAPABILITY_NAME_COMMENTER,
+          capability: CAPABILITY_NAME_OWNER,
         },
       ],
       overriderRoles: [],
