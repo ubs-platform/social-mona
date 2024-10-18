@@ -13,6 +13,7 @@ import { SocialCommentSchema, SocialComment } from './model/comment';
 import { Reaction, ReactionSchema } from './model/reaction';
 import { CommentController } from './controller/comment.controller';
 import { CommentService } from './service/comment.service';
+import { CommentMapper } from './mapper/comment.mapper';
 
 @Module({
   imports: [
@@ -39,6 +40,6 @@ import { CommentService } from './service/comment.service';
     ]),
   ],
   controllers: [CommentController],
-  providers: [CommentService],
+  providers: [CommentService, CommentMapper],
 })
 export class AppModule {}

@@ -11,13 +11,14 @@ import {
 import { ClientKafka } from '@nestjs/microservices';
 
 import { UserAuthBackendDTO } from '@ubs-platform/users-common';
-import { CommentAddDTO } from 'libs/common/src';
+import { CommentAddDTO, CommentDTO, CommentSearchDTO } from 'libs/common/src';
 import { EntityOwnershipService } from '@ubs-platform/users-mona-microservice-helper';
 import { CommentMapper } from '../mapper/comment.mapper';
+import { InjectModel } from '@nestjs/mongoose';
 @Injectable()
 export class CommentService {
   constructor(
-    @Inject(SocialComment.name) private commentModel: Model<SocialComment>,
+    @InjectModel(SocialComment.name) private commentModel: Model<SocialComment>,
     private eoService: EntityOwnershipService,
     private commentMapper: CommentMapper
   ) {}
@@ -26,10 +27,34 @@ export class CommentService {
     commentDto: CommentAddDTO,
     currentUser: UserAuthBackendDTO
   ) {
+    this.fillChildsWithParentIfEmpty(commentDto);
     const commentModel = new this.commentModel();
     this.commentMapper.moveToEntity(commentModel, commentDto);
+    commentModel.byUserId = currentUser.id;
+    commentModel.byFullName = currentUser.name + ' ' + currentUser.surname;
+
     const saved = await commentModel.save();
     this.sendOwnershipForSavedComment(saved, currentUser);
+    return this.commentMapper.toDto(saved);
+  }
+
+  async searchComments(comment: CommentSearchDTO) {
+    this.fillChildsWithParentIfEmpty(comment);
+    const ls = await this.commentModel.find({
+      childEntityId: comment.childEntityId,
+      childEntityName: comment.childEntityName,
+      mainEntityId: comment.mainEntityId,
+      mainEntityName: comment.mainEntityName,
+      entityGroup: comment.entityGroup,
+    });
+    return ls.map((a) => this.commentMapper.toDto(a));
+  }
+
+  private fillChildsWithParentIfEmpty(comment: CommentSearchDTO | CommentDTO) {
+    if (!comment.childEntityId && !comment.childEntityName) {
+      comment.childEntityId = comment.mainEntityId;
+      comment.childEntityName = comment.mainEntityName;
+    }
   }
 
   private sendOwnershipForSavedComment(

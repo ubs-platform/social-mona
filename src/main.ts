@@ -15,7 +15,7 @@ async function bootstrap() {
   app.connectMicroservice(getMicroserviceConnection(''));
 
   app.setGlobalPrefix(globalPrefix);
-  const port = process.env.PORT || 3169;
+  const port = process.env.PORT || 3117;
   await app.startAllMicroservices();
   await app.listen(port);
   Logger.log(

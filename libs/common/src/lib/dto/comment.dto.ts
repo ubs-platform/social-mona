@@ -1,4 +1,4 @@
-export class CommentAddDTO {
+export interface CommentAddDTO {
   _id: String;
   entityGroup: String;
   mainEntityName: String;
@@ -8,7 +8,15 @@ export class CommentAddDTO {
   textContent: String;
 }
 
-export class CommentDTO {
+export interface CommentSearchDTO {
+  entityGroup: String;
+  mainEntityName: String;
+  mainEntityId: String;
+  childEntityName: String;
+  childEntityId: String;
+}
+
+export interface CommentDTO {
   _id: String;
 
   entityGroup: String;

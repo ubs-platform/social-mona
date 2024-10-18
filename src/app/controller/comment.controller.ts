@@ -1,21 +1,27 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import {
   CurrentUser,
   JwtAuthGuard,
 } from '@ubs-platform/users-mona-microservice-helper';
-import { CommentAddDTO } from 'libs/common/src';
+import { CommentAddDTO, CommentSearchDTO } from 'libs/common/src';
 import { CommentService } from '../service/comment.service';
 import { UserAuthBackendDTO } from '@ubs-platform/users-common';
 
-@Controller()
+@Controller('comment')
 export class CommentController {
   constructor(private commentService: CommentService) {}
-  @Post('comment')
+  @Post()
   @UseGuards(JwtAuthGuard)
-  addComment(
+  async addComment(
     @Body() comment: CommentAddDTO,
     @CurrentUser() user: UserAuthBackendDTO
   ) {
-    this.commentService.insertComment(comment, user);
+    return await this.commentService.insertComment(comment, user);
+  }
+
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  async fetchComments(@Query() comment: CommentSearchDTO) {
+    return await this.commentService.searchComments(comment);
   }
 }
