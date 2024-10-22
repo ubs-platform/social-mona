@@ -14,6 +14,7 @@ import { Reaction, ReactionSchema } from './model/reaction';
 import { CommentController } from './controller/comment.controller';
 import { CommentService } from './service/comment.service';
 import { CommentMapper } from './mapper/comment.mapper';
+import { UserIntercept } from './guard/UserIntercept';
 
 @Module({
   imports: [
@@ -40,6 +41,6 @@ import { CommentMapper } from './mapper/comment.mapper';
     ]),
   ],
   controllers: [CommentController],
-  providers: [CommentService, CommentMapper],
+  providers: [CommentService, CommentMapper, UserIntercept],
 })
 export class AppModule {}

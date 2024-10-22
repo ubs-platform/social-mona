@@ -41,3 +41,8 @@ export interface CommentDTO {
 
   editCount: Number;
 }
+
+export interface CommentAbilityDTO {
+  userCanComment: boolean;
+  userCommentBlockReason: string;
+}
