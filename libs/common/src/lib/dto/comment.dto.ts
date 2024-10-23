@@ -46,3 +46,7 @@ export interface CommentAbilityDTO {
   userCanComment: boolean;
   userCommentBlockReason: string;
 }
+
+export interface CommentEditDTO {
+  textContent: String;
+}

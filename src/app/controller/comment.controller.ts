@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import {
   CurrentUser,
   JwtAuthGuard,
@@ -6,6 +16,7 @@ import {
 import {
   CommentAbilityDTO,
   CommentAddDTO,
+  CommentEditDTO,
   CommentSearchDTO,
 } from 'libs/common/src';
 import { CommentService } from '../service/comment.service';
@@ -40,19 +51,25 @@ export class CommentController {
     @Query() comment: CommentSearchDTO,
     @CurrentUser() currentUser
   ): Promise<CommentAbilityDTO> {
-    if (currentUser) {
-      return {
-        userCanComment: true,
-        userCommentBlockReason: '',
-      };
-    } else {
-      return {
-        userCanComment: false,
-        userCommentBlockReason:
-          'mona.comments.userCommentBlockReason.not-logged',
-      };
-    }
-    // console.info(currentUser);
-    // return await this.commentService.searchComments(comment);
+    return await this.commentService.checkAbilities(comment, currentUser);
+  }
+
+  @Delete(':id')
+  @UseGuards(UserIntercept)
+  async deleteComment(
+    @Param('id') id: string,
+    @CurrentUser() currentUser
+  ): Promise<void> {
+    await this.commentService.deleteComment(id, currentUser);
+  }
+
+  @Put(':id')
+  @UseGuards(UserIntercept)
+  async editComment(
+    @Param('id') id: string,
+    @CurrentUser() currentUser,
+    @Body() newCommetn: CommentEditDTO
+  ): Promise<void> {
+    return await this.commentService.editComment(id, newCommetn, currentUser);
   }
 }

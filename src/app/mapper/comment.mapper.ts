@@ -14,6 +14,7 @@ export class CommentMapper {
       lastEditDate: comment.lastEditDate,
       creationDate: comment.creationDate,
       textContent: comment.textContent,
+      _id: comment._id,
     } as CommentDTO;
   }
 
