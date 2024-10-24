@@ -16,6 +16,7 @@ export class CommentMapper {
       textContent: comment.textContent,
       childOfCommentId: comment.childOfCommentId,
       isChild: comment.isChild,
+      _id: comment._id,
     } as CommentDTO;
   }
 
