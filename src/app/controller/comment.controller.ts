@@ -14,10 +14,13 @@ import {
   JwtAuthGuard,
 } from '@ubs-platform/users-mona-microservice-helper';
 import {
-  CommentAbilityDTO,
+  CommentAbilityDTO as CommentingAbilityDTO,
   CommentAddDTO,
   CommentEditDTO,
   CommentSearchDTO,
+  CanManuplateComment,
+  ExistCommentAbilityDTO,
+  CommentDTO,
 } from 'libs/common/src';
 import { CommentService } from '../service/comment.service';
 import { UserAuthBackendDTO } from '@ubs-platform/users-common';
@@ -50,8 +53,26 @@ export class CommentController {
   async canComment(
     @Query() comment: CommentSearchDTO,
     @CurrentUser() currentUser
-  ): Promise<CommentAbilityDTO> {
-    return await this.commentService.checkAbilities(comment, currentUser);
+  ): Promise<CommentingAbilityDTO> {
+    return await this.commentService.checkCommentingAbilities(
+      comment,
+      currentUser
+    );
+  }
+
+  @Get(':id/ability')
+  @UseGuards(UserIntercept)
+  async canExistCommentAbility(
+    @Param('id') commentId: string,
+    @CurrentUser() currentUser
+  ): Promise<ExistCommentAbilityDTO> {
+    return {
+      canRemove: (
+        await this.commentService.checkCanDelete(commentId, currentUser)
+      ).allow,
+      canEdit: (await this.commentService.checkCanEdit(commentId, currentUser))
+        .allow,
+    };
   }
 
   @Delete(':id')
@@ -69,7 +90,7 @@ export class CommentController {
     @Param('id') id: string,
     @CurrentUser() currentUser,
     @Body() newCommetn: CommentEditDTO
-  ): Promise<void> {
+  ): Promise<CommentDTO> {
     return await this.commentService.editComment(id, newCommetn, currentUser);
   }
 }

@@ -1,3 +1,8 @@
+import {
+  EntityOwnershipDTO,
+  UserAuthBackendDTO,
+} from '@ubs-platform/users-common';
+
 export interface CommentAddDTO {
   _id?: String;
   entityGroup: String;
@@ -41,7 +46,7 @@ export interface CommentDTO {
 
   lastEditDate: Date;
 
-  editCount: Number;
+  editCount: number;
 
   isChild?: boolean;
 
@@ -55,4 +60,14 @@ export interface CommentAbilityDTO {
 
 export interface CommentEditDTO {
   textContent: String;
+}
+
+export class ExistCommentAbilityDTO {
+  canRemove: boolean;
+  canEdit: boolean;
+}
+
+export interface CanManuplateComment {
+  entityOwnership: EntityOwnershipDTO;
+  allow: boolean;
 }

@@ -16,9 +16,13 @@ import {
 } from 'libs/const/constants';
 import { ClientKafka } from '@nestjs/microservices';
 
-import { UserAuthBackendDTO } from '@ubs-platform/users-common';
 import {
-  CommentAbilityDTO,
+  EntityOwnershipDTO,
+  UserAuthBackendDTO,
+} from '@ubs-platform/users-common';
+import {
+  CanManuplateComment,
+  CommentAbilityDTO as CommentingAbilityDTO,
   CommentAddDTO,
   CommentDTO,
   CommentEditDTO,
@@ -121,10 +125,10 @@ export class CommentService {
     return ls.map((a) => this.commentMapper.toDto(a));
   }
 
-  async checkAbilities(
+  async checkCommentingAbilities(
     comment: CommentSearchDTO,
     currentUser: any
-  ): Promise<CommentAbilityDTO> {
+  ): Promise<CommentingAbilityDTO> {
     if (currentUser) {
       return {
         userCanComment: true,
@@ -140,6 +144,50 @@ export class CommentService {
   }
 
   async deleteComment(commentId: string, currentUser: UserAuthBackendDTO) {
+    var { allow, entityOwnership } = await this.checkCanDelete(
+      commentId,
+      currentUser
+    );
+
+    if (allow) {
+      await this.commentModel.deleteOne({ _id: commentId });
+      await this.eoService.deleteOwnership(entityOwnership);
+    } else {
+      console.info('izin mizin yok karşim silemezsin amına koyam');
+      throw new UnauthorizedException();
+    }
+  }
+
+  public async checkCanEdit(
+    id: string,
+    currentUser: any
+  ): Promise<CanManuplateComment> {
+    let allow = false;
+    let entityOwnership: EntityOwnershipDTO;
+    const commentOEs = await lastValueFrom(
+      this.searchOwnershipForSavedComment(id)
+    );
+    if (commentOEs.length > 1) {
+      console.warn('There is more than one entity ownership');
+    }
+    if (commentOEs.length > 0) {
+      entityOwnership = commentOEs[0];
+      allow =
+        commentOEs[0].userCapabilities.find(
+          (a) =>
+            a.userId == currentUser.id &&
+            a.capability == CAPABILITY_NAME_COMMENT_OWNER
+        ) != null;
+    }
+    return { allow, entityOwnership };
+  }
+
+  public async checkCanDelete(
+    commentId: string,
+    currentUser: UserAuthBackendDTO
+  ): Promise<CanManuplateComment> {
+    let entityOwnership: EntityOwnershipDTO;
+
     let allow = false;
     const commentOEs = await lastValueFrom(
       this.searchOwnershipForSavedComment(commentId)
@@ -148,47 +196,29 @@ export class CommentService {
       console.warn('There is more than one entity ownership');
     }
     if (commentOEs.length > 0) {
-      console.info(commentOEs[0]);
+      entityOwnership = commentOEs[0];
       allow =
         commentOEs[0].userCapabilities.find(
           (a) => a.userId == currentUser.id
         ) != null;
     }
-
-    if (allow) {
-      await this.commentModel.deleteOne({ _id: commentId });
-      await this.eoService.deleteOwnership(commentOEs[0]);
-    } else {
-      console.info('izin mizin yok karşim silemezsin amına koyam');
-      throw new UnauthorizedException();
-    }
+    return { entityOwnership, allow };
   }
 
   async editComment(
     id: string,
     newCommetn: CommentEditDTO,
     currentUser: any
-  ): Promise<void> {
-    let allow = false;
-    const commentOEs = await lastValueFrom(
-      this.searchOwnershipForSavedComment(id)
-    );
-    if (commentOEs.length > 1) {
-      console.warn('There is more than one entity ownership');
-    }
-    if (commentOEs.length > 0) {
-      allow =
-        commentOEs[0].userCapabilities.find(
-          (a) => a.userId == currentUser.id
-        ) != null;
-    }
+  ): Promise<CommentDTO> {
+    var { allow, entityOwnership } = await this.checkCanEdit(id, currentUser);
 
     if (allow) {
       const comment = await this.commentModel.findById(id);
       comment.textContent = newCommetn.textContent;
-      comment.editCount = new Number(1 + comment.editCount.toFixed());
+      comment.editCount = 1 + comment.editCount;
       comment.lastEditDate = new Date();
-      await this.eoService.deleteOwnership(commentOEs[0]);
+      comment.save();
+      return this.commentMapper.toDto(comment);
     } else {
       throw new UnauthorizedException();
     }

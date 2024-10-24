@@ -41,7 +41,7 @@ export class SocialComment {
   lastEditDate: Date;
 
   @Prop({ type: Number, default: 0 })
-  editCount: Number;
+  editCount: number;
 
   @Prop({ type: Number, default: 0 })
   childCommentsCount: Number;
