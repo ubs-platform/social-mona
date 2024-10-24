@@ -1,11 +1,12 @@
 export interface CommentAddDTO {
-  _id: String;
+  _id?: String;
   entityGroup: String;
   mainEntityName: String;
   mainEntityId: String;
   childEntityName: String;
   childEntityId: String;
   textContent: String;
+  childOfCommentId?: string;
 }
 
 export interface CommentSearchDTO {
@@ -14,6 +15,7 @@ export interface CommentSearchDTO {
   mainEntityId: String;
   childEntityName: String;
   childEntityId: String;
+  childOfCommentId?: string;
 }
 
 export interface CommentDTO {
@@ -40,4 +42,8 @@ export interface CommentDTO {
   lastEditDate: Date;
 
   editCount: Number;
+
+  isChild?: boolean;
+
+  childOfCommentId?: string;
 }

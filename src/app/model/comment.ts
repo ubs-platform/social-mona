@@ -22,6 +22,12 @@ export class SocialComment {
   @Prop(String)
   textContent: String;
 
+  @Prop(Boolean)
+  isChild: boolean;
+
+  @Prop(String)
+  childOfCommentId: string;
+
   @Prop(String)
   byUserId: String;
 
@@ -36,6 +42,9 @@ export class SocialComment {
 
   @Prop({ type: Number, default: 0 })
   editCount: Number;
+
+  @Prop({ type: Number, default: 0 })
+  childCommentsCount: Number;
 }
 
 export const SocialCommentSchema = SchemaFactory.createForClass(SocialComment);

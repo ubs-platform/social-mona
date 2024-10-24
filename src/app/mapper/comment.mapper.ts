@@ -14,6 +14,8 @@ export class CommentMapper {
       lastEditDate: comment.lastEditDate,
       creationDate: comment.creationDate,
       textContent: comment.textContent,
+      childOfCommentId: comment.childOfCommentId,
+      isChild: comment.isChild,
     } as CommentDTO;
   }
 
@@ -28,5 +30,7 @@ export class CommentMapper {
     commentModel.childEntityName = commentDto.childEntityName;
     commentModel.childEntityId = commentDto.childEntityId;
     commentModel.entityGroup = commentDto.entityGroup;
+    commentModel.childOfCommentId = commentDto.childOfCommentId;
+    commentModel.isChild = commentDto.childOfCommentId?.trim() ? true : false;
   }
 }
