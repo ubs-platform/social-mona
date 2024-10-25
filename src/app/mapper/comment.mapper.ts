@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CommentAddDTO, CommentDTO } from 'libs/common/src';
 import { SocialComment } from '../model/comment';
+import { UserAuthBackendDTO } from '@ubs-platform/users-common';
 
 @Injectable()
 export class CommentMapper {
-  toDto(comment: SocialComment) {
+  toDto(comment: SocialComment, currentUser?: UserAuthBackendDTO) {
     return {
       byFullName: comment.byFullName,
       byUserId: comment.byUserId,
@@ -17,6 +18,9 @@ export class CommentMapper {
       childOfCommentId: comment.childOfCommentId,
       isChild: comment.isChild,
       _id: comment._id,
+      votesLength: comment.votesLength,
+      userDownVoted: currentUser != null && comment.downvoteUserIds.includes(currentUser.id),
+      userUpVoted: currentUser != null && comment.upvoteUserIds.includes(currentUser.id),
     } as CommentDTO;
   }
 

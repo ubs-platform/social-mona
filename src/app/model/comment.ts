@@ -45,6 +45,15 @@ export class SocialComment {
 
   @Prop({ type: Number, default: 0 })
   childCommentsCount: Number;
+
+  @Prop([String])
+  upvoteUserIds: string[] = [];
+
+  @Prop([String])
+  downvoteUserIds: string[] = [];
+
+  @Prop(Number)
+  votesLength: number = 0;
 }
 
 export const SocialCommentSchema = SchemaFactory.createForClass(SocialComment);

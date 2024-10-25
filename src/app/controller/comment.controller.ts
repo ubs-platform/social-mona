@@ -42,10 +42,10 @@ export class CommentController {
   @UseGuards(UserIntercept)
   async fetchComments(
     @Query() comment: CommentSearchDTO,
-    @CurrentUser() currentUser
+    @CurrentUser() currentUser : UserAuthBackendDTO
   ) {
     console.info(currentUser);
-    return await this.commentService.searchComments(comment);
+    return await this.commentService.searchComments(comment, currentUser);
   }
 
   @Get('ability')
@@ -76,7 +76,7 @@ export class CommentController {
   }
 
   @Delete(':id')
-  @UseGuards(UserIntercept)
+  @UseGuards(JwtAuthGuard)
   async deleteComment(
     @Param('id') id: string,
     @CurrentUser() currentUser
@@ -85,12 +85,30 @@ export class CommentController {
   }
 
   @Put(':id')
-  @UseGuards(UserIntercept)
+  @UseGuards(JwtAuthGuard)
   async editComment(
     @Param('id') id: string,
     @CurrentUser() currentUser,
     @Body() newCommetn: CommentEditDTO
   ): Promise<CommentDTO> {
     return await this.commentService.editComment(id, newCommetn, currentUser);
+  }
+
+  @Put(':id/upvote')
+  @UseGuards(JwtAuthGuard)
+  async upvote(
+    @Param('id') id: string,
+    @CurrentUser() currentUser,
+  ): Promise<CommentDTO> {
+    return await this.commentService.voteComment(id, currentUser, "UP");
+  }
+
+  @Put(':id/downvote')
+  @UseGuards(JwtAuthGuard)
+  async downvote(
+    @Param('id') id: string,
+    @CurrentUser() currentUser,
+  ): Promise<CommentDTO> {
+    return await this.commentService.voteComment(id, currentUser, "DOWN");
   }
 }

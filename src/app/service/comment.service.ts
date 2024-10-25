@@ -113,7 +113,7 @@ export class CommentService {
     return this.commentMapper.toDto(saved);
   }
 
-  async searchComments(comment: CommentSearchDTO) {
+  async searchComments(comment: CommentSearchDTO, currentUser: UserAuthBackendDTO) {
     this.fillChildrenWithParentIfEmpty(comment);
     const ls = await this.commentModel.find({
       childEntityId: comment.childEntityId,
@@ -122,7 +122,7 @@ export class CommentService {
       mainEntityName: comment.mainEntityName,
       entityGroup: comment.entityGroup,
     });
-    return ls.map((a) => this.commentMapper.toDto(a));
+    return ls.map((a) => this.commentMapper.toDto(a, currentUser));
   }
 
   async checkCommentingAbilities(
@@ -218,9 +218,45 @@ export class CommentService {
       comment.editCount = 1 + comment.editCount;
       comment.lastEditDate = new Date();
       comment.save();
-      return this.commentMapper.toDto(comment);
+      return this.commentMapper.toDto(comment, currentUser);
     } else {
       throw new UnauthorizedException();
     }
+  }
+
+  async voteComment(
+    id: string,
+    currentUser: UserAuthBackendDTO,
+    u: 'UP' | 'DOWN'
+  ): Promise<CommentDTO> {
+    const ac = await this.commentModel.findById(id);
+
+    const upvoteIndex = ac.upvoteUserIds.indexOf(currentUser.id);
+    const downvoteIndex = ac.downvoteUserIds.indexOf(currentUser.id);
+    if (!ac.votesLength || Number.isNaN(ac.votesLength)) {
+      ac.votesLength = 0;
+    }
+    if (upvoteIndex > -1) {
+      ac.upvoteUserIds.splice(upvoteIndex, 1);
+      ac.votesLength = ac.votesLength - 1;
+
+    }
+    if (downvoteIndex > -1) {
+      ac.downvoteUserIds.splice(downvoteIndex, 1);
+      ac.votesLength = ac.votesLength + 1;
+
+    }
+    if (u == 'DOWN' && downvoteIndex == -1) {
+  
+      ac.downvoteUserIds.push(currentUser.id);
+      ac.votesLength = ac.votesLength - 1;
+    } else if (u == 'UP' && upvoteIndex == -1) {
+
+      ac.upvoteUserIds.push(currentUser.id);
+      ac.votesLength = ac.votesLength + 1;
+    }
+    ac.save();
+
+    return this.commentMapper.toDto(ac, currentUser);
   }
 }

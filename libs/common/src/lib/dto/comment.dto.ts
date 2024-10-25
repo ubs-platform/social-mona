@@ -51,6 +51,12 @@ export interface CommentDTO {
   isChild?: boolean;
 
   childOfCommentId?: string;
+
+  userDownVoted: boolean;
+
+  userUpVoted: boolean;
+
+  votesLength: number;
 }
 
 export interface CommentAbilityDTO {
