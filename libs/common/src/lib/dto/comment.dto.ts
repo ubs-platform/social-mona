@@ -77,3 +77,15 @@ export interface CanManuplateComment {
   entityOwnership: EntityOwnershipDTO;
   allow: boolean;
 }
+
+export interface PaginationRequest {
+  page: number;
+  size: number;
+}
+
+export interface PaginationResult {
+  page: number;
+  size: number;
+  maxItemLength: number;
+  list: CommentDTO[]
+}

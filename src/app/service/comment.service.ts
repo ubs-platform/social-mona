@@ -27,11 +27,13 @@ import {
   CommentDTO,
   CommentEditDTO,
   CommentSearchDTO,
+  PaginationRequest,
+  PaginationResult,
 } from 'libs/common/src';
 import { EntityOwnershipService } from '@ubs-platform/users-mona-microservice-helper';
 import { CommentMapper } from '../mapper/comment.mapper';
 import { InjectModel } from '@nestjs/mongoose';
-import { lastValueFrom } from 'rxjs';
+import { lastValueFrom, max } from 'rxjs';
 @Injectable()
 export class CommentService {
   constructor(
@@ -113,16 +115,52 @@ export class CommentService {
     return this.commentMapper.toDto(saved);
   }
 
-  async searchComments(comment: CommentSearchDTO, currentUser: UserAuthBackendDTO) {
+  async searchComments(
+    comment: CommentSearchDTO & PaginationRequest,
+    currentUser: UserAuthBackendDTO
+  ): Promise<PaginationResult> {
     this.fillChildrenWithParentIfEmpty(comment);
-    const ls = await this.commentModel.find({
-      childEntityId: comment.childEntityId,
-      childEntityName: comment.childEntityName,
-      mainEntityId: comment.mainEntityId,
-      mainEntityName: comment.mainEntityName,
-      entityGroup: comment.entityGroup,
-    });
-    return ls.map((a) => this.commentMapper.toDto(a, currentUser));
+    // const ls = await this.commentModel.find({
+    //   childEntityId: comment.childEntityId,
+    //   childEntityName: comment.childEntityName,
+    //   mainEntityId: comment.mainEntityId,
+    //   mainEntityName: comment.mainEntityName,
+    //   entityGroup: comment.entityGroup,
+    // });
+    const results = await this.commentModel.aggregate([
+      {
+        $match: {
+          childEntityId: comment.childEntityId,
+          childEntityName: comment.childEntityName,
+          mainEntityId: comment.mainEntityId,
+          mainEntityName: comment.mainEntityName,
+          entityGroup: comment.entityGroup,
+        },
+      },
+      {
+        $facet: {
+          total: [{ $count: 'total' }],
+          data: [
+            { $sort: { votesLength: -1 } },
+            { $skip: comment.size * comment.page },
+            // lack of convert to int
+            { $limit: parseInt(comment.size as any as string) },
+          ],
+        },
+      },
+    ]);
+
+    const maxItemLength = results[0].total[0].total;
+    console.info(results[0].total[0].total)
+    // return { list, maxItemLength };
+    return {
+      page: comment.page,
+      size: comment.size,
+      list: results[0].data.map((a) =>
+        this.commentMapper.toDto(a, currentUser)
+      ),
+      maxItemLength,
+    };
   }
 
   async checkCommentingAbilities(
@@ -239,19 +277,15 @@ export class CommentService {
     if (upvoteIndex > -1) {
       ac.upvoteUserIds.splice(upvoteIndex, 1);
       ac.votesLength = ac.votesLength - 1;
-
     }
     if (downvoteIndex > -1) {
       ac.downvoteUserIds.splice(downvoteIndex, 1);
       ac.votesLength = ac.votesLength + 1;
-
     }
     if (u == 'DOWN' && downvoteIndex == -1) {
-  
       ac.downvoteUserIds.push(currentUser.id);
       ac.votesLength = ac.votesLength - 1;
     } else if (u == 'UP' && upvoteIndex == -1) {
-
       ac.upvoteUserIds.push(currentUser.id);
       ac.votesLength = ac.votesLength + 1;
     }

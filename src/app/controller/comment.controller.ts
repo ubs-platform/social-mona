@@ -21,6 +21,7 @@ import {
   CanManuplateComment,
   ExistCommentAbilityDTO,
   CommentDTO,
+  PaginationRequest,
 } from 'libs/common/src';
 import { CommentService } from '../service/comment.service';
 import { UserAuthBackendDTO } from '@ubs-platform/users-common';
@@ -41,7 +42,7 @@ export class CommentController {
   @Get()
   @UseGuards(UserIntercept)
   async fetchComments(
-    @Query() comment: CommentSearchDTO,
+    @Query() comment: CommentSearchDTO & PaginationRequest,
     @CurrentUser() currentUser : UserAuthBackendDTO
   ) {
     console.info(currentUser);

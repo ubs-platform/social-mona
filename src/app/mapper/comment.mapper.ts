@@ -19,8 +19,8 @@ export class CommentMapper {
       isChild: comment.isChild,
       _id: comment._id,
       votesLength: comment.votesLength,
-      userDownVoted: currentUser != null && comment.downvoteUserIds.includes(currentUser.id),
-      userUpVoted: currentUser != null && comment.upvoteUserIds.includes(currentUser.id),
+      userDownVoted: currentUser != null && comment.downvoteUserIds?.includes(currentUser.id),
+      userUpVoted: currentUser != null && comment.upvoteUserIds?.includes(currentUser.id),
     } as CommentDTO;
   }
 
