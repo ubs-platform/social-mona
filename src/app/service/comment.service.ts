@@ -111,6 +111,17 @@ export class CommentService {
     commentModel.byFullName = currentUser.name + ' ' + currentUser.surname;
     commentModel.votesLength = 0;
     const saved = await commentModel.save();
+
+    if (commentDto.childOfCommentId) {
+      const parent = await this.commentModel.findById(
+        commentDto.childOfCommentId
+      );
+      debugger;
+      parent.childCommentsCount = !parent.childCommentsCount
+        ? 1
+        : parent.childCommentsCount + 1;
+      parent.save();
+    }
     this.sendOwnershipForSavedComment(saved, currentUser);
     return this.commentMapper.toDto(saved);
   }
@@ -119,6 +130,15 @@ export class CommentService {
     comment: CommentSearchDTO & PaginationRequest,
     currentUser: UserAuthBackendDTO
   ): Promise<PaginationResult> {
+    const sortingRotation = comment.sortRotation == 'ASC' ? 1 : -1;
+    const sortingField =
+      comment.sortField == 'CREATIONDATE'
+        ? {
+            creationDate: sortingRotation,
+            _id: sortingRotation,
+          }
+        : { votesLength: sortingRotation, _id: sortingRotation };
+
     this.fillChildrenWithParentIfEmpty(comment);
     // const ls = await this.commentModel.find({
     //   childEntityId: comment.childEntityId,
@@ -135,17 +155,21 @@ export class CommentService {
           mainEntityId: comment.mainEntityId,
           mainEntityName: comment.mainEntityName,
           entityGroup: comment.entityGroup,
+          ...(comment.childOfCommentId
+            ? { childOfCommentId: comment.childOfCommentId, isChild: true }
+            : { isChild: { $ne: true } }),
         },
       },
       {
         $facet: {
           total: [{ $count: 'total' }],
+          //@ts-ignore
           data: [
-            { $sort: { votesLength: -1 } },
+            { $sort: sortingField },
             { $skip: comment.size * comment.page },
             // lack of convert to int
             { $limit: parseInt(comment.size as any as string) },
-          ],
+          ].filter((a) => a),
         },
       },
     ]);

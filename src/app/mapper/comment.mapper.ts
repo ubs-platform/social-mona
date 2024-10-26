@@ -11,16 +11,23 @@ export class CommentMapper {
       byUserId: comment.byUserId,
       childEntityId: comment.childEntityId,
       childEntityName: comment.childEntityName,
+      mainEntityId: comment.mainEntityId,
+      mainEntityName: comment.mainEntityName,
+      entityGroup: comment.entityGroup,
       editCount: comment.editCount,
       lastEditDate: comment.lastEditDate,
       creationDate: comment.creationDate,
       textContent: comment.textContent,
       childOfCommentId: comment.childOfCommentId,
       isChild: comment.isChild,
+      childCommentsCount: comment.childCommentsCount,
       _id: comment._id,
       votesLength: comment.votesLength,
-      userDownVoted: currentUser != null && comment.downvoteUserIds?.includes(currentUser.id),
-      userUpVoted: currentUser != null && comment.upvoteUserIds?.includes(currentUser.id),
+      userDownVoted:
+        currentUser != null &&
+        comment.downvoteUserIds?.includes(currentUser.id),
+      userUpVoted:
+        currentUser != null && comment.upvoteUserIds?.includes(currentUser.id),
     } as CommentDTO;
   }
 

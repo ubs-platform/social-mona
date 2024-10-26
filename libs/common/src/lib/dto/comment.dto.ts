@@ -57,6 +57,8 @@ export interface CommentDTO {
   userUpVoted: boolean;
 
   votesLength: number;
+
+  childCommentsCount: number;
 }
 
 export interface CommentAbilityDTO {
@@ -78,14 +80,19 @@ export interface CanManuplateComment {
   allow: boolean;
 }
 
+export type SORT_FIELD = 'VOTE' | 'CREATIONDATE';
+export type SORT_ROTATION = 'ASC' | 'DESC';
+
 export interface PaginationRequest {
   page: number;
   size: number;
+  sortField: SORT_FIELD;
+  sortRotation: SORT_ROTATION;
 }
 
 export interface PaginationResult {
   page: number;
   size: number;
   maxItemLength: number;
-  list: CommentDTO[]
+  list: CommentDTO[];
 }

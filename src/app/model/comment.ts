@@ -44,7 +44,7 @@ export class SocialComment {
   editCount: number;
 
   @Prop({ type: Number, default: 0 })
-  childCommentsCount: Number;
+  childCommentsCount: number;
 
   @Prop([String])
   upvoteUserIds: string[] = [];
