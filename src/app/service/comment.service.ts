@@ -109,7 +109,7 @@ export class CommentService {
     this.commentMapper.moveToEntity(commentModel, commentDto);
     commentModel.byUserId = currentUser.id;
     commentModel.byFullName = currentUser.name + ' ' + currentUser.surname;
-
+    commentModel.votesLength = 0;
     const saved = await commentModel.save();
     this.sendOwnershipForSavedComment(saved, currentUser);
     return this.commentMapper.toDto(saved);
@@ -150,8 +150,7 @@ export class CommentService {
       },
     ]);
 
-    const maxItemLength = results[0].total[0].total;
-    console.info(results[0].total[0].total)
+    const maxItemLength = results[0]?.total[0]?.total || 0;
     // return { list, maxItemLength };
     return {
       page: comment.page,
@@ -240,6 +239,9 @@ export class CommentService {
           (a) => a.userId == currentUser.id
         ) != null;
     }
+    console.info(
+      commentOEs[0].userCapabilities.find((a) => a.userId == currentUser.id)
+    );
     return { entityOwnership, allow };
   }
 
