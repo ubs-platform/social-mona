@@ -59,6 +59,9 @@ export interface CommentDTO {
   votesLength: number;
 
   childCommentsCount: number;
+
+  canRemove: boolean;
+  canEdit: boolean;
 }
 
 export interface CommentAbilityDTO {
@@ -68,11 +71,6 @@ export interface CommentAbilityDTO {
 
 export interface CommentEditDTO {
   textContent: String;
-}
-
-export class ExistCommentAbilityDTO {
-  canRemove: boolean;
-  canEdit: boolean;
 }
 
 export interface CanManuplateComment {

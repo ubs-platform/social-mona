@@ -19,7 +19,6 @@ import {
   CommentEditDTO,
   CommentSearchDTO,
   CanManuplateComment,
-  ExistCommentAbilityDTO,
   CommentDTO,
   PaginationRequest,
 } from 'libs/common/src';
@@ -49,6 +48,15 @@ export class CommentController {
     return await this.commentService.searchComments(comment, currentUser);
   }
 
+
+  @Get("count")
+  @UseGuards(UserIntercept)
+  async commentCount(
+    @Query() comment: CommentSearchDTO
+  ) {
+    return await this.commentService.commentCount(comment);
+  }
+
   @Get('ability')
   @UseGuards(UserIntercept)
   async canComment(
@@ -59,21 +67,6 @@ export class CommentController {
       comment,
       currentUser
     );
-  }
-
-  @Get(':id/ability')
-  @UseGuards(UserIntercept)
-  async canExistCommentAbility(
-    @Param('id') commentId: string,
-    @CurrentUser() currentUser
-  ): Promise<ExistCommentAbilityDTO> {
-    return {
-      canRemove: (
-        await this.commentService.checkCanDelete(commentId, currentUser)
-      ).allow,
-      canEdit: (await this.commentService.checkCanEdit(commentId, currentUser))
-        .allow,
-    };
   }
 
   @Delete(':id')

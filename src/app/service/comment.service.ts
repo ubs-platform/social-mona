@@ -29,6 +29,7 @@ import {
   CommentSearchDTO,
   PaginationRequest,
   PaginationResult,
+  CommentAbilityDTO,
 } from 'libs/common/src';
 import { EntityOwnershipService } from '@ubs-platform/users-mona-microservice-helper';
 import { CommentMapper } from '../mapper/comment.mapper';
@@ -176,12 +177,32 @@ export class CommentService {
 
     const maxItemLength = results[0]?.total[0]?.total || 0;
     // return { list, maxItemLength };
+    return await this.commentsPaginatedToDto(
+      comment,
+      results,
+      currentUser,
+      maxItemLength
+    );
+  }
+
+  private async commentsPaginatedToDto(
+    comment: CommentSearchDTO & PaginationRequest,
+    results: any[],
+    currentUser: UserAuthBackendDTO,
+    maxItemLength: any
+  ): Promise<PaginationResult> {
+    const commentDtos: Array<CommentDTO> = [];
+    for (let index = 0; index < results[0].data.length; index++) {
+      const comment = results[0].data[index];
+      commentDtos.push({
+        ...(await this.commentMapper.toDto(comment, currentUser)),
+      });
+    }
+
     return {
       page: comment.page,
       size: comment.size,
-      list: results[0].data.map((a) =>
-        this.commentMapper.toDto(a, currentUser)
-      ),
+      list: commentDtos,
       maxItemLength,
     };
   }
@@ -205,7 +226,7 @@ export class CommentService {
   }
 
   async deleteComment(commentId: string, currentUser: UserAuthBackendDTO) {
-    var { allow, entityOwnership } = await this.checkCanDelete(
+    var { allow, entityOwnership } = await this.commentMapper.checkCanDelete(
       commentId,
       currentUser
     );
@@ -219,62 +240,15 @@ export class CommentService {
     }
   }
 
-  public async checkCanEdit(
-    id: string,
-    currentUser: any
-  ): Promise<CanManuplateComment> {
-    let allow = false;
-    let entityOwnership: EntityOwnershipDTO;
-    const commentOEs = await lastValueFrom(
-      this.searchOwnershipForSavedComment(id)
-    );
-    if (commentOEs.length > 1) {
-      console.warn('There is more than one entity ownership');
-    }
-    if (commentOEs.length > 0) {
-      entityOwnership = commentOEs[0];
-      allow =
-        commentOEs[0].userCapabilities.find(
-          (a) =>
-            a.userId == currentUser.id &&
-            a.capability == CAPABILITY_NAME_COMMENT_OWNER
-        ) != null;
-    }
-    return { allow, entityOwnership };
-  }
-
-  public async checkCanDelete(
-    commentId: string,
-    currentUser: UserAuthBackendDTO
-  ): Promise<CanManuplateComment> {
-    let entityOwnership: EntityOwnershipDTO;
-
-    let allow = false;
-    const commentOEs = await lastValueFrom(
-      this.searchOwnershipForSavedComment(commentId)
-    );
-    if (commentOEs.length > 1) {
-      console.warn('There is more than one entity ownership');
-    }
-    if (commentOEs.length > 0) {
-      entityOwnership = commentOEs[0];
-      allow =
-        commentOEs[0].userCapabilities.find(
-          (a) => a.userId == currentUser.id
-        ) != null;
-    }
-    console.info(
-      commentOEs[0].userCapabilities.find((a) => a.userId == currentUser.id)
-    );
-    return { entityOwnership, allow };
-  }
-
   async editComment(
     id: string,
     newCommetn: CommentEditDTO,
     currentUser: any
   ): Promise<CommentDTO> {
-    var { allow, entityOwnership } = await this.checkCanEdit(id, currentUser);
+    var { allow, entityOwnership } = await this.commentMapper.checkCanEdit(
+      id,
+      currentUser
+    );
 
     if (allow) {
       const comment = await this.commentModel.findById(id);
@@ -318,5 +292,24 @@ export class CommentService {
     ac.save();
 
     return this.commentMapper.toDto(ac, currentUser);
+  }
+
+  async commentCount(comment: CommentSearchDTO) {
+    const commentCount = await this.commentModel.aggregate([
+      {
+        $match: {
+          childEntityId: comment.childEntityId,
+          childEntityName: comment.childEntityName,
+          mainEntityId: comment.mainEntityId,
+          mainEntityName: comment.mainEntityName,
+          entityGroup: comment.entityGroup,
+        },
+      },
+      {
+        $count: 'total',
+      },
+    ]);
+    debugger;
+    return commentCount?.[0]?.total || 0;
   }
 }
