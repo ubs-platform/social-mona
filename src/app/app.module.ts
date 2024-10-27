@@ -15,6 +15,10 @@ import { CommentController } from './controller/comment.controller';
 import { CommentService } from './service/comment.service';
 import { CommentMapper } from './mapper/comment.mapper';
 import { UserIntercept } from './guard/UserIntercept';
+import {
+  SocialCommentMeta,
+  SocialCommentMetaSchema,
+} from './model/comment-meta';
 
 @Module({
   imports: [
@@ -32,6 +36,7 @@ import { UserIntercept } from './guard/UserIntercept';
       // { name: EmailTemplate.name, schema: EmailTemplateSchema },
       { name: SocialComment.name, schema: SocialCommentSchema },
       { name: Reaction.name, schema: ReactionSchema },
+      { name: SocialCommentMeta.name, schema: SocialCommentMetaSchema },
     ]),
     ClientsModule.register([
       {

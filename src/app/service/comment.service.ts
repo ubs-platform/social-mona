@@ -35,10 +35,13 @@ import { EntityOwnershipService } from '@ubs-platform/users-mona-microservice-he
 import { CommentMapper } from '../mapper/comment.mapper';
 import { InjectModel } from '@nestjs/mongoose';
 import { lastValueFrom, max } from 'rxjs';
+import { SocialCommentMeta } from '../model/comment-meta';
 @Injectable()
 export class CommentService {
   constructor(
     @InjectModel(SocialComment.name) private commentModel: Model<SocialComment>,
+    @InjectModel(SocialCommentMeta.name)
+    private commentMetaModel: Model<SocialCommentMeta>,
     private eoService: EntityOwnershipService,
     private commentMapper: CommentMapper
   ) {}
@@ -105,6 +108,14 @@ export class CommentService {
     commentDto: CommentAddDTO,
     currentUser: UserAuthBackendDTO
   ) {
+    const status = await this.checkCommentingAbilities(commentDto, currentUser);
+    if (!status.userCanComment) {
+      throw new UnauthorizedException(
+        'commenting-not-allowed',
+        status.userCommentBlockReason
+      );
+    }
+    let commentMeta = await this.findOrCreateNewMeta(commentDto);
     this.fillChildrenWithParentIfEmpty(commentDto);
     const commentModel = new this.commentModel();
     this.commentMapper.moveToEntity(commentModel, commentDto);
@@ -112,12 +123,12 @@ export class CommentService {
     commentModel.byFullName = currentUser.name + ' ' + currentUser.surname;
     commentModel.votesLength = 0;
     const saved = await commentModel.save();
-
+    commentMeta.length += 1;
+    commentMeta.save();
     if (commentDto.childOfCommentId) {
       const parent = await this.commentModel.findById(
         commentDto.childOfCommentId
       );
-      debugger;
       parent.childCommentsCount = !parent.childCommentsCount
         ? 1
         : parent.childCommentsCount + 1;
@@ -125,6 +136,27 @@ export class CommentService {
     }
     this.sendOwnershipForSavedComment(saved, currentUser);
     return this.commentMapper.toDto(saved);
+  }
+
+  private async findOrCreateNewMeta(commentDto: CommentSearchDTO) {
+    let commentMeta = await this.commentMetaModel.findOne({
+      entityGroup: commentDto.entityGroup,
+      mainEntityId: commentDto.mainEntityId,
+      mainEntityName: commentDto.mainEntityName,
+    });
+    if (commentMeta == null) {
+      commentMeta = new this.commentMetaModel({
+        entityGroup: commentDto.entityGroup,
+        mainEntityId: commentDto.mainEntityId,
+        mainEntityName: commentDto.mainEntityName,
+        commentingStatus: 'ALLOW',
+        bannedUsers: [],
+        length: 0,
+      });
+
+      await commentMeta.save();
+    }
+    return commentMeta;
   }
 
   async searchComments(
@@ -209,13 +241,22 @@ export class CommentService {
 
   async checkCommentingAbilities(
     comment: CommentSearchDTO,
-    currentUser: any
+    currentUser: UserAuthBackendDTO
   ): Promise<CommentingAbilityDTO> {
     if (currentUser) {
-      return {
-        userCanComment: true,
-        userCommentBlockReason: '',
-      };
+      const ac = await this.findOrCreateNewMeta(comment);
+      if (ac.commentingDisabledUserIds.includes(currentUser.id)) {
+        return {
+          userCanComment: false,
+          userCommentBlockReason:
+            'mona.comments.userCommentBlockReason.disabled',
+        };
+      } else {
+        return {
+          userCanComment: true,
+          userCommentBlockReason: '',
+        };
+      }
     } else {
       return {
         userCanComment: false,
@@ -309,7 +350,6 @@ export class CommentService {
         $count: 'total',
       },
     ]);
-    debugger;
     return commentCount?.[0]?.total || 0;
   }
 }
