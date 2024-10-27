@@ -336,6 +336,8 @@ export class CommentService {
   }
 
   async commentCount(comment: CommentSearchDTO) {
+    // const meta = await this.findOrCreateNewMeta(comment);
+    // return meta.length
     const commentCount = await this.commentModel.aggregate([
       {
         $match: {
