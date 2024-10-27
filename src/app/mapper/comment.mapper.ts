@@ -1,27 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { CanManuplateComment, CommentAddDTO, CommentDTO } from 'libs/common/src';
+import {
+  CanManuplateComment,
+  CommentAddDTO,
+  CommentDTO,
+} from 'libs/common/src';
 import { SocialComment } from '../model/comment';
-import { EntityOwnershipDTO, UserAuthBackendDTO } from '@ubs-platform/users-common';
-import {   CAPABILITY_NAME_COMMENT_OWNER,
+import {
+  EntityOwnershipDTO,
+  UserAuthBackendDTO,
+} from '@ubs-platform/users-common';
+import {
+  CAPABILITY_NAME_COMMENT_OWNER,
   CAPABILITY_NAME_ENTITY_OWNER,
   ENTITY_GROUP as SOCIAL_ENTITY_GROUP,
   ENTITY_NAME_COMMENTS as SOCIAL_ENTITY_NAME_COMMENTS,
   KAFKA_CLIENT,
-  PAT_INSERT_OWNERSHIP, } from 'libs/const/constants';
+  PAT_INSERT_OWNERSHIP,
+} from 'libs/const/constants';
 import { lastValueFrom } from 'rxjs';
 import { EntityOwnershipService } from '@ubs-platform/users-mona-microservice-helper';
 
-
 @Injectable()
 export class CommentMapper {
-
   /**
    *
    */
-  constructor(private eoService: EntityOwnershipService) {
-    
-  }
- async toDto(comment: SocialComment, currentUser?: UserAuthBackendDTO) {
+  constructor(private eoService: EntityOwnershipService) {}
+  async toDto(comment: SocialComment, currentUser?: UserAuthBackendDTO) {
     return {
       byFullName: comment.byFullName,
       byUserId: comment.byUserId,
@@ -64,8 +69,6 @@ export class CommentMapper {
     commentModel.isChild = commentDto.childOfCommentId?.trim() ? true : false;
   }
 
-
-
   public async checkCanEdit(
     id: string | String,
     currentUser: any
@@ -90,7 +93,6 @@ export class CommentMapper {
     return { allow, entityOwnership };
   }
 
-
   private searchOwnershipForSavedComment(commentId: string | String) {
     return this.eoService.searchOwnership({
       entityGroup: SOCIAL_ENTITY_GROUP,
@@ -98,7 +100,6 @@ export class CommentMapper {
       entityId: commentId,
     });
   }
-
 
   public async checkCanDelete(
     commentId: string | String,
@@ -120,9 +121,7 @@ export class CommentMapper {
           (a) => a.userId == currentUser.id
         ) != null;
     }
-    console.info(
-      commentOEs[0].userCapabilities.find((a) => a.userId == currentUser.id)
-    );
+
     return { entityOwnership, allow };
   }
 }
