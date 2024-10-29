@@ -19,13 +19,15 @@ import {
 } from 'libs/const/constants';
 import { lastValueFrom } from 'rxjs';
 import { EntityOwnershipService } from '@ubs-platform/users-mona-microservice-helper';
+import { CommentAbilityCheckService } from '../service/comment-ability-check.service';
 
 @Injectable()
 export class CommentMapper {
   /**
    *
    */
-  constructor(private eoService: EntityOwnershipService) {}
+  constructor(private commentAbilityService: CommentAbilityCheckService) {}
+
   async toDto(comment: SocialComment, currentUser?: UserAuthBackendDTO) {
     return {
       byFullName: comment.byFullName,
@@ -44,8 +46,17 @@ export class CommentMapper {
       childCommentsCount: comment.childCommentsCount,
       _id: comment._id,
       votesLength: comment.votesLength,
-      canEdit: (await this.checkCanEdit(comment._id, currentUser)).allow,
-      canRemove: (await this.checkCanDelete(comment._id, currentUser)).allow,
+      canEdit: (
+        await this.commentAbilityService.checkCanEdit(comment._id, currentUser)
+      ).allow,
+      canRemove: (
+        await this.commentAbilityService.checkCanDelete(comment, currentUser)
+      ).allow,
+      userCommentAdmin:
+        (await this.commentAbilityService.isUserOwnerOfRealEntity(
+          comment,
+          currentUser
+        )) != null,
       userDownVoted:
         currentUser != null &&
         comment.downvoteUserIds?.includes(currentUser.id),
@@ -67,61 +78,5 @@ export class CommentMapper {
     commentModel.entityGroup = commentDto.entityGroup;
     commentModel.childOfCommentId = commentDto.childOfCommentId;
     commentModel.isChild = commentDto.childOfCommentId?.trim() ? true : false;
-  }
-
-  public async checkCanEdit(
-    id: string | String,
-    currentUser: any
-  ): Promise<CanManuplateComment> {
-    let allow = false;
-    let entityOwnership: EntityOwnershipDTO;
-    const commentOEs = await lastValueFrom(
-      this.searchOwnershipForSavedComment(id)
-    );
-    if (commentOEs.length > 1) {
-      console.warn('There is more than one entity ownership');
-    }
-    if (commentOEs.length > 0) {
-      entityOwnership = commentOEs[0];
-      allow =
-        commentOEs[0].userCapabilities.find(
-          (a) =>
-            a.userId == currentUser.id &&
-            a.capability == CAPABILITY_NAME_COMMENT_OWNER
-        ) != null;
-    }
-    return { allow, entityOwnership };
-  }
-
-  private searchOwnershipForSavedComment(commentId: string | String) {
-    return this.eoService.searchOwnership({
-      entityGroup: SOCIAL_ENTITY_GROUP,
-      entityName: SOCIAL_ENTITY_NAME_COMMENTS,
-      entityId: commentId,
-    });
-  }
-
-  public async checkCanDelete(
-    commentId: string | String,
-    currentUser: UserAuthBackendDTO
-  ): Promise<CanManuplateComment> {
-    let entityOwnership: EntityOwnershipDTO;
-
-    let allow = false;
-    const commentOEs = await lastValueFrom(
-      this.searchOwnershipForSavedComment(commentId)
-    );
-    if (commentOEs.length > 1) {
-      console.warn('There is more than one entity ownership');
-    }
-    if (commentOEs.length > 0) {
-      entityOwnership = commentOEs[0];
-      allow =
-        commentOEs[0].userCapabilities.find(
-          (a) => a.userId == currentUser.id
-        ) != null;
-    }
-
-    return { entityOwnership, allow };
   }
 }

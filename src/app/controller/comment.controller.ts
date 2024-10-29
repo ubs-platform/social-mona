@@ -25,10 +25,16 @@ import {
 import { CommentService } from '../service/comment.service';
 import { UserAuthBackendDTO } from '@ubs-platform/users-common';
 import { UserIntercept } from '../guard/UserIntercept';
+import { CommentAbilityCheckService } from '../service/comment-ability-check.service';
+import { CommentMetaService } from '../service/comment-meta.service';
 
 @Controller('comment')
 export class CommentController {
-  constructor(private commentService: CommentService) {}
+  constructor(
+    private commentService: CommentService,
+    private commentAbility: CommentAbilityCheckService,
+    private commntMetaService: CommentMetaService
+  ) {}
   @Post()
   @UseGuards(JwtAuthGuard)
   async addComment(
@@ -42,18 +48,15 @@ export class CommentController {
   @UseGuards(UserIntercept)
   async fetchComments(
     @Query() comment: CommentSearchDTO & PaginationRequest,
-    @CurrentUser() currentUser : UserAuthBackendDTO
+    @CurrentUser() currentUser: UserAuthBackendDTO
   ) {
     console.info(currentUser);
     return await this.commentService.searchComments(comment, currentUser);
   }
 
-
-  @Get("count")
+  @Get('count')
   @UseGuards(UserIntercept)
-  async commentCount(
-    @Query() comment: CommentSearchDTO
-  ) {
+  async commentCount(@Query() comment: CommentSearchDTO) {
     return await this.commentService.commentCount(comment);
   }
 
@@ -63,10 +66,18 @@ export class CommentController {
     @Query() comment: CommentSearchDTO,
     @CurrentUser() currentUser
   ): Promise<CommentingAbilityDTO> {
-    return await this.commentService.checkCommentingAbilities(
+    return await this.commentAbility.checkCommentingAbilities(
       comment,
       currentUser
     );
+  }
+
+  @Put('block-user')
+  @UseGuards(UserIntercept)
+  async banUser(
+    @Query() comment: CommentSearchDTO & {}
+  ): Promise<CommentingAbilityDTO> {
+    return await this.commentMetaService.banUser(comment, currentUser);
   }
 
   @Delete(':id')
@@ -92,17 +103,17 @@ export class CommentController {
   @UseGuards(JwtAuthGuard)
   async upvote(
     @Param('id') id: string,
-    @CurrentUser() currentUser,
+    @CurrentUser() currentUser
   ): Promise<CommentDTO> {
-    return await this.commentService.voteComment(id, currentUser, "UP");
+    return await this.commentService.voteComment(id, currentUser, 'UP');
   }
 
   @Put(':id/downvote')
   @UseGuards(JwtAuthGuard)
   async downvote(
     @Param('id') id: string,
-    @CurrentUser() currentUser,
+    @CurrentUser() currentUser
   ): Promise<CommentDTO> {
-    return await this.commentService.voteComment(id, currentUser, "DOWN");
+    return await this.commentService.voteComment(id, currentUser, 'DOWN');
   }
 }

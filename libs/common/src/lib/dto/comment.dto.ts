@@ -62,6 +62,7 @@ export interface CommentDTO {
 
   canRemove: boolean;
   canEdit: boolean;
+  userCommentAdmin: boolean;
 }
 
 export interface CommentAbilityDTO {

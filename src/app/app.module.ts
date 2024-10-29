@@ -19,6 +19,8 @@ import {
   SocialCommentMeta,
   SocialCommentMetaSchema,
 } from './model/comment-meta';
+import { CommentMetaService } from './service/comment-meta.service';
+import { CommentAbilityCheckService } from './service/comment-ability-check.service';
 
 @Module({
   imports: [
@@ -46,6 +48,12 @@ import {
     ]),
   ],
   controllers: [CommentController],
-  providers: [CommentService, CommentMapper, UserIntercept],
+  providers: [
+    CommentService,
+    CommentMapper,
+    UserIntercept,
+    CommentMetaService,
+    CommentAbilityCheckService,
+  ],
 })
 export class AppModule {}
