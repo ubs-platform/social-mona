@@ -20,6 +20,7 @@ import {
 import { lastValueFrom } from 'rxjs';
 import { EntityOwnershipService } from '@ubs-platform/users-mona-microservice-helper';
 import { CommentAbilityCheckService } from '../service/comment-ability-check.service';
+import { SocialCommentMeta } from '../model/comment-meta';
 
 @Injectable()
 export class CommentMapper {
@@ -28,7 +29,11 @@ export class CommentMapper {
    */
   constructor(private commentAbilityService: CommentAbilityCheckService) {}
 
-  async toDto(comment: SocialComment, currentUser?: UserAuthBackendDTO) {
+  async toDto(
+    comment: SocialComment,
+    commentMeta: SocialCommentMeta,
+    currentUser?: UserAuthBackendDTO
+  ) {
     return {
       byFullName: comment.byFullName,
       byUserId: comment.byUserId,
@@ -62,6 +67,9 @@ export class CommentMapper {
         comment.downvoteUserIds?.includes(currentUser.id),
       userUpVoted:
         currentUser != null && comment.upvoteUserIds?.includes(currentUser.id),
+      userBanned: commentMeta.commentingDisabledUserIds.includes(
+        comment.byUserId + ''
+      ),
     } as CommentDTO;
   }
 

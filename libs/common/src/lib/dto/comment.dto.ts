@@ -14,6 +14,19 @@ export interface CommentAddDTO {
   childOfCommentId?: string;
 }
 
+export interface BanUserDTO {
+  entityGroup: string;
+  mainEntityName: string;
+  mainEntityId: string;
+  byUserId: string;
+}
+
+export interface CommentMetaSearchDTO {
+  entityGroup: String;
+  mainEntityName: String;
+  mainEntityId: String;
+}
+
 export interface CommentSearchDTO {
   entityGroup: String;
   mainEntityName: String;
@@ -63,6 +76,7 @@ export interface CommentDTO {
   canRemove: boolean;
   canEdit: boolean;
   userCommentAdmin: boolean;
+  userBanned: boolean;
 }
 
 export interface CommentAbilityDTO {
@@ -95,3 +109,9 @@ export interface PaginationResult {
   maxItemLength: number;
   list: CommentDTO[];
 }
+
+export type CommentStatus = 'ALLOW' | 'DISABLE' | 'ARCHIVE';
+
+export type NewCommentingStatus = CommentMetaSearchDTO & {
+  newStatus: 'ALLOW' | 'DISABLE' | 'ARCHIVE';
+};

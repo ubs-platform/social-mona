@@ -77,7 +77,7 @@ export class CommentService {
       saved,
       currentUser
     );
-    return this.commentMapper.toDto(saved);
+    return this.commentMapper.toDto(saved, commentMeta, currentUser);
   }
 
   async searchComments(
@@ -150,11 +150,12 @@ export class CommentService {
     currentUser: UserAuthBackendDTO,
     maxItemLength: any
   ): Promise<PaginationResult> {
+    const meta = await this.commentMetaService.findOrCreateNewMeta(comment);
     const commentDtos: Array<CommentDTO> = [];
     for (let index = 0; index < results[0].data.length; index++) {
       const comment = results[0].data[index];
       commentDtos.push({
-        ...(await this.commentMapper.toDto(comment, currentUser)),
+        ...(await this.commentMapper.toDto(comment, meta, currentUser)),
       });
     }
 
@@ -186,7 +187,7 @@ export class CommentService {
   async editComment(
     id: string,
     newCommetn: CommentEditDTO,
-    currentUser: any
+    currentUser: UserAuthBackendDTO
   ): Promise<CommentDTO> {
     var { allow, entityOwnership } =
       await this.commentAbilityCheckService.checkCanEdit(id, currentUser);
@@ -197,7 +198,8 @@ export class CommentService {
       comment.editCount = 1 + comment.editCount;
       comment.lastEditDate = new Date();
       comment.save();
-      return this.commentMapper.toDto(comment, currentUser);
+      const meta = await this.commentMetaService.findOrCreateNewMeta(comment);
+      return this.commentMapper.toDto(comment, meta, currentUser);
     } else {
       throw new UnauthorizedException();
     }
@@ -231,8 +233,9 @@ export class CommentService {
       ac.votesLength = ac.votesLength + 1;
     }
     ac.save();
+    const meta = await this.commentMetaService.findOrCreateNewMeta(ac);
 
-    return this.commentMapper.toDto(ac, currentUser);
+    return this.commentMapper.toDto(ac, meta, currentUser);
   }
 
   async commentCount(comment: CommentSearchDTO) {

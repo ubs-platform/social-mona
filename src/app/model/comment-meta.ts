@@ -14,7 +14,7 @@ export class SocialCommentMeta {
   mainEntityId: string;
 
   @Prop(String)
-  commentingStatus: 'ALLOW' | 'ARCHIVE';
+  commentingStatus: 'ALLOW' | 'ARCHIVE' | 'DISABLE';
 
   @Prop([String])
   commentingDisabledUserIds: string[];

@@ -21,6 +21,9 @@ import {
   CanManuplateComment,
   CommentDTO,
   PaginationRequest,
+  BanUserDTO,
+  CommentMetaSearchDTO,
+  NewCommentingStatus,
 } from 'libs/common/src';
 import { CommentService } from '../service/comment.service';
 import { UserAuthBackendDTO } from '@ubs-platform/users-common';
@@ -72,12 +75,30 @@ export class CommentController {
     );
   }
 
+  @Get('status')
+  async commentingStatus(
+    @Query() comment: CommentMetaSearchDTO,
+    @CurrentUser() currentUser: UserAuthBackendDTO
+  ) {
+    return await this.commntMetaService.fetchStatus(comment);
+  }
+
+  @Get('block-user')
+  @UseGuards(UserIntercept)
+  async fetchBlockedUsers(@Query() comment: CommentMetaSearchDTO) {
+    return await this.commntMetaService.getBlockedUsers(comment);
+  }
+
   @Put('block-user')
   @UseGuards(UserIntercept)
-  async banUser(
-    @Query() comment: CommentSearchDTO & {}
-  ): Promise<CommentingAbilityDTO> {
-    return await this.commentMetaService.banUser(comment, currentUser);
+  async banUser(@Body() comment: BanUserDTO) {
+    await this.commntMetaService.banUser(comment);
+  }
+
+  @Put('unblock-user')
+  @UseGuards(UserIntercept)
+  async unbanUser(@Body() comment: BanUserDTO) {
+    await this.commntMetaService.unbanUser(comment);
   }
 
   @Delete(':id')
@@ -87,6 +108,11 @@ export class CommentController {
     @CurrentUser() currentUser
   ): Promise<void> {
     await this.commentService.deleteComment(id, currentUser);
+  }
+  @Put('status')
+  async setCommentingStatus(@Body() comment: NewCommentingStatus) {
+    console.info('status');
+    await this.commntMetaService.setStatus(comment, comment.newStatus);
   }
 
   @Put(':id')
