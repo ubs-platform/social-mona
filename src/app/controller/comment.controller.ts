@@ -60,7 +60,7 @@ export class CommentController {
   @Get('count')
   @UseGuards(UserIntercept)
   async commentCount(@Query() comment: CommentSearchDTO) {
-    return await this.commentService.commentCount(comment);
+    return await this.commntMetaService.count(comment);
   }
 
   @Get('ability')

@@ -62,8 +62,6 @@ export class CommentService {
     commentModel.byFullName = currentUser.name + ' ' + currentUser.surname;
     commentModel.votesLength = 0;
     const saved = await commentModel.save();
-    commentMeta.length += 1;
-    commentMeta.save();
     if (commentDto.childOfCommentId) {
       const parent = await this.commentModel.findById(
         commentDto.childOfCommentId
@@ -71,8 +69,9 @@ export class CommentService {
       parent.childCommentsCount = !parent.childCommentsCount
         ? 1
         : parent.childCommentsCount + 1;
-      parent.save();
+      await parent.save();
     }
+    await this.commentMetaService.increaseExisting(commentDto, commentMeta);
     await this.commentAbilityCheckService.sendOwnershipForSavedComment(
       saved,
       currentUser

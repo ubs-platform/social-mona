@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { CommentTotalCacheMapItem } from './comment-total-cache-map';
 
 @Schema()
 export class SocialCommentMeta {
@@ -19,8 +20,8 @@ export class SocialCommentMeta {
   @Prop([String])
   commentingDisabledUserIds: string[];
 
-  @Prop(Number)
-  length: number;
+  @Prop([CommentTotalCacheMapItem])
+  subItemLengths: CommentTotalCacheMapItem[] = [];
 }
 
 export const SocialCommentMetaSchema =

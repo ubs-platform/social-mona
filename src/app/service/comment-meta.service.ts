@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Document, Model } from 'mongoose';
 
 import {
   BanUserDTO,
@@ -37,6 +37,57 @@ export class CommentMetaService {
       await commentMeta.save();
     }
     return commentMeta;
+  }
+
+  public async increase(commentDto: CommentSearchDTO) {
+    const u = await this.findOrCreateNewMeta(commentDto);
+    return await this.increaseExisting(commentDto, u);
+  }
+
+  public async increaseExisting(
+    commentDto: CommentSearchDTO,
+    u: SocialCommentMeta &
+      Document &
+      Omit<
+        SocialCommentMeta &
+          Required<{
+            _id: String;
+          }>,
+        never
+      >
+  ) {
+    const willBeIncreased = u.subItemLengths.findIndex(
+      (a) =>
+        a.childEntityId == commentDto.childEntityId &&
+        a.childEntityName == commentDto.childEntityName
+    );
+    if (willBeIncreased > -1) {
+      u.subItemLengths[willBeIncreased].length =
+        u.subItemLengths[willBeIncreased].length + 1;
+    } else {
+      u.subItemLengths.push({
+        childEntityId: commentDto.childEntityId,
+        childEntityName: commentDto.childEntityName,
+        length: 1,
+      });
+    }
+    debugger;
+    await u.markModified('subItemLengths');
+    await u.save();
+  }
+
+  public async count(commentDto: CommentSearchDTO) {
+    const u = await this.findOrCreateNewMeta(commentDto);
+    const willBeIncreased = u.subItemLengths.find(
+      (a) =>
+        a.childEntityId == commentDto.childEntityId &&
+        a.childEntityName == commentDto.childEntityName
+    );
+    if (willBeIncreased) {
+      return willBeIncreased.length;
+    } else {
+      return 0;
+    }
   }
 
   async banUser(comment: BanUserDTO) {
