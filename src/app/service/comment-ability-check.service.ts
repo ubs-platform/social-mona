@@ -26,35 +26,12 @@ import { CommentMetaService } from './comment-meta.service';
 @Injectable()
 export class CommentAbilityCheckService {
   constructor(
-    @InjectModel(SocialCommentMeta.name)
-    private commentMetaModel: Model<SocialCommentMeta>,
     @InjectModel(SocialComment.name) private commentModel: Model<SocialComment>,
     // @InjectModel(SocialCommentMeta.name)
     // private commentMetaModel: Model<SocialCommentMeta>,
     private eoService: EntityOwnershipService,
     private commentMetaService: CommentMetaService
   ) {}
-
-  public async findOrCreateNewMeta(commentDto: CommentSearchDTO) {
-    let commentMeta = await this.commentMetaModel.findOne({
-      entityGroup: commentDto.entityGroup,
-      mainEntityId: commentDto.mainEntityId,
-      mainEntityName: commentDto.mainEntityName,
-    });
-    if (commentMeta == null) {
-      commentMeta = new this.commentMetaModel({
-        entityGroup: commentDto.entityGroup,
-        mainEntityId: commentDto.mainEntityId,
-        mainEntityName: commentDto.mainEntityName,
-        commentingStatus: 'ALLOW',
-        bannedUsers: [],
-        length: 0,
-      });
-
-      await commentMeta.save();
-    }
-    return commentMeta;
-  }
 
   public async checkCanEdit(
     id: String,
@@ -196,26 +173,32 @@ export class CommentAbilityCheckService {
     comment: CommentSearchDTO,
     currentUser: UserAuthBackendDTO
   ): Promise<CommentingAbilityDTO> {
-    if (currentUser) {
-      const ac = await this.commentMetaService.findOrCreateNewMeta(comment);
-      if (ac.commentingDisabledUserIds.includes(currentUser.id)) {
+    const meta = await this.commentMetaService.findOrCreateNewMeta(comment);
+    if (meta.commentingStatus == 'ALLOW') {
+      if (currentUser) {
+        if (meta.commentingDisabledUserIds.includes(currentUser.id)) {
+          return {
+            userCanComment: false,
+            userCommentBlockReason:
+              'mona.comments.userCommentBlockReason.disabled',
+          };
+        } else {
+          return {
+            userCanComment: true,
+            userCommentBlockReason: '',
+          };
+        }
+      } else {
         return {
           userCanComment: false,
           userCommentBlockReason:
-            'mona.comments.userCommentBlockReason.disabled',
-        };
-      } else {
-        return {
-          userCanComment: true,
-          userCommentBlockReason: '',
+            'mona.comments.userCommentBlockReason.not-logged',
         };
       }
-    } else {
+    } else
       return {
         userCanComment: false,
-        userCommentBlockReason:
-          'mona.comments.userCommentBlockReason.not-logged',
+        userCommentBlockReason: 'mona.comments.userCommentBlockReason.disabled',
       };
-    }
   }
 }
