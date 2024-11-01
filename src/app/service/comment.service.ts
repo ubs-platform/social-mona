@@ -250,4 +250,8 @@ export class CommentService {
     ]);
     return commentCount?.[0]?.total || 0;
   }
+
+  async clearUserCommentsAll(byUserId: string) {
+    await this.commentModel.deleteMany({ byUserId });
+  }
 }

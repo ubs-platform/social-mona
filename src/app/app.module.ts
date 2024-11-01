@@ -21,6 +21,7 @@ import {
 } from './model/comment-meta';
 import { CommentMetaService } from './service/comment-meta.service';
 import { CommentAbilityCheckService } from './service/comment-ability-check.service';
+import { CommentAdminController } from './controller/comment-admin.controller';
 
 @Module({
   imports: [
@@ -47,7 +48,7 @@ import { CommentAbilityCheckService } from './service/comment-ability-check.serv
       },
     ]),
   ],
-  controllers: [CommentController],
+  controllers: [CommentController, CommentAdminController],
   providers: [
     CommentService,
     CommentMapper,
