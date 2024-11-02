@@ -23,50 +23,26 @@ import { InjectModel } from '@nestjs/mongoose';
 import { lastValueFrom } from 'rxjs';
 import { SocialCommentMeta } from '../model/comment-meta';
 import { CommentMetaService } from './comment-meta.service';
+import { ApplicationSocialRestrictionService } from './application-social-restriction.service';
 @Injectable()
 export class CommentAbilityCheckService {
   constructor(
-    @InjectModel(SocialComment.name) private commentModel: Model<SocialComment>,
-    // @InjectModel(SocialCommentMeta.name)
-    // private commentMetaModel: Model<SocialCommentMeta>,
     private eoService: EntityOwnershipService,
-    private commentMetaService: CommentMetaService
+    private commentMetaService: CommentMetaService,
+    private appSocialRestrictionService: ApplicationSocialRestrictionService
   ) {}
 
   public async checkCanEdit(
-    id: String,
+    socialComment: SocialComment,
     currentUser: any
   ): Promise<CanManuplateComment> {
     if (currentUser != null) {
-      let allow = false;
-      let entityOwnership: EntityOwnershipDTO;
-      const commentOEs = await lastValueFrom(
-        this.searchOwnershipForSavedComment(id)
-      );
-      if (commentOEs.length > 1) {
-        console.warn('There is more than one entity ownership');
-      }
-      if (commentOEs.length > 0) {
-        entityOwnership = commentOEs[0];
-        allow =
-          commentOEs[0].userCapabilities.find(
-            (a) =>
-              a.userId == currentUser.id &&
-              a.capability == CAPABILITY_NAME_COMMENT_OWNER
-          ) != null;
-      }
-      return { allow, entityOwnership };
-    } else {
-      return { allow: false, entityOwnership: null };
-    }
-  }
+      let allow = this.isCommentPoster(socialComment, currentUser.id);
 
-  public searchOwnershipForSavedComment(commentId: string | String) {
-    return this.eoService.searchOwnership({
-      entityGroup: SOCIAL_ENTITY_GROUP,
-      entityName: SOCIAL_ENTITY_NAME_COMMENTS,
-      entityId: commentId,
-    });
+      return { allow };
+    } else {
+      return { allow: false };
+    }
   }
 
   public async checkCanDelete(
@@ -74,24 +50,9 @@ export class CommentAbilityCheckService {
     currentUser: UserAuthBackendDTO
   ): Promise<CanManuplateComment> {
     if (currentUser != null) {
-      let entityOwnership: EntityOwnershipDTO;
+      let allow = this.isCommentPoster(socialComment, currentUser.id);
 
-      let allow = socialComment.byUserId == currentUser.id;
-
-      const commentOEs = await lastValueFrom(
-        this.searchOwnershipForSavedComment(socialComment._id)
-      );
-
-      if (commentOEs.length > 1) {
-        console.warn('There is more than one entity ownership');
-      }
-      if (commentOEs.length > 0) {
-        entityOwnership = commentOEs[0];
-        allow =
-          commentOEs[0].userCapabilities.find(
-            (a) => a.userId == currentUser.id
-          ) != null;
-      } else {
+      if (!allow) {
         const e = await this.isUserOwnerOfRealEntity(
           socialComment,
           currentUser
@@ -99,45 +60,14 @@ export class CommentAbilityCheckService {
         allow = e != null;
       }
 
-      return { entityOwnership, allow };
+      return { allow };
     } else {
-      return { allow: false, entityOwnership: null };
+      return { allow: false };
     }
   }
 
-  public async sendOwnershipForSavedComment(
-    saved: import('mongoose').Document<unknown, any, SocialComment> &
-      Omit<SocialComment & Required<{ _id: String }>, never>,
-    currentUser: UserAuthBackendDTO
-  ) {
-    const realObject = await this.realEntityOwnership(saved);
-    let realOwner = realObject[0]?.userCapabilities?.find(
-      (a) => a.capability == CAPABILITY_NAME_ENTITY_OWNER
-    ).userId;
-
-    const realOwnerArr =
-      realOwner != null
-        ? [
-            {
-              userId: realOwner,
-              capability: CAPABILITY_NAME_ENTITY_OWNER,
-            },
-          ]
-        : [];
-
-    this.eoService.insertOwnership({
-      entityGroup: SOCIAL_ENTITY_GROUP,
-      entityName: SOCIAL_ENTITY_NAME_COMMENTS,
-      entityId: saved._id,
-      userCapabilities: [
-        {
-          userId: currentUser.id,
-          capability: CAPABILITY_NAME_COMMENT_OWNER,
-        },
-        ...realOwnerArr,
-      ],
-      overriderRoles: [],
-    });
+  isCommentPoster(socialComment: SocialComment, userId: string) {
+    return socialComment.byUserId == userId;
   }
 
   public async realEntityOwnership(saved: SocialComment) {
@@ -176,7 +106,21 @@ export class CommentAbilityCheckService {
     const meta = await this.commentMetaService.findOrCreateNewMeta(comment);
     if (meta.commentingStatus == 'ALLOW') {
       if (currentUser) {
-        if (meta.commentingDisabledUserIds.includes(currentUser.id)) {
+        // ⓈⒶBANCI - ALEYKÜM SELAM
+        const globalBan =
+          await this.appSocialRestrictionService.userRestrictionDetails({
+            userId: currentUser.id,
+            restriction: 'COMMENT',
+          });
+
+        if (globalBan != null) {
+          return {
+            userCanComment: false,
+            userCommentBlockReason:
+              'mona.comments.userCommentBlockReason.disabled',
+            extraNote: globalBan.note,
+          };
+        } else if (meta.commentingDisabledUserIds.includes(currentUser.id)) {
           return {
             userCanComment: false,
             userCommentBlockReason:

@@ -52,7 +52,7 @@ export class CommentMapper {
       _id: comment._id,
       votesLength: comment.votesLength,
       canEdit: (
-        await this.commentAbilityService.checkCanEdit(comment._id, currentUser)
+        await this.commentAbilityService.checkCanEdit(comment, currentUser)
       ).allow,
       canRemove: (
         await this.commentAbilityService.checkCanDelete(comment, currentUser)

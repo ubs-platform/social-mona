@@ -6,13 +6,18 @@ export class ApplicationSocialRestriction {
 
   @Prop(String)
   userId: string;
-  
+
   @Prop(String)
-  restriction: "COMMENT" | "POST";
+  restriction: 'COMMENT' | 'POST';
 
   @Prop(Date)
-  
+  until: Date;
 
+  @Prop(Boolean)
+  endless: boolean;
+
+  @Prop(String)
+  note: string;
 }
 
 export const ApplicationSocialRestrictionSchema = SchemaFactory.createForClass(

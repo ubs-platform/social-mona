@@ -22,6 +22,12 @@ import {
 import { CommentMetaService } from './service/comment-meta.service';
 import { CommentAbilityCheckService } from './service/comment-ability-check.service';
 import { CommentAdminController } from './controller/comment-admin.controller';
+import {
+  ApplicationSocialRestriction,
+  ApplicationSocialRestrictionSchema,
+} from './model/application-social-restriction';
+import { ApplicationSocialRestrictionController } from './controller/application-social-restrictions.controller';
+import { ApplicationSocialRestrictionService } from './service/application-social-restriction.service';
 
 @Module({
   imports: [
@@ -40,6 +46,10 @@ import { CommentAdminController } from './controller/comment-admin.controller';
       { name: SocialComment.name, schema: SocialCommentSchema },
       { name: Reaction.name, schema: ReactionSchema },
       { name: SocialCommentMeta.name, schema: SocialCommentMetaSchema },
+      {
+        name: ApplicationSocialRestriction.name,
+        schema: ApplicationSocialRestrictionSchema,
+      },
     ]),
     ClientsModule.register([
       {
@@ -48,13 +58,18 @@ import { CommentAdminController } from './controller/comment-admin.controller';
       },
     ]),
   ],
-  controllers: [CommentController, CommentAdminController],
+  controllers: [
+    CommentController,
+    CommentAdminController,
+    ApplicationSocialRestrictionController,
+  ],
   providers: [
     CommentService,
     CommentMapper,
     UserIntercept,
     CommentMetaService,
     CommentAbilityCheckService,
+    ApplicationSocialRestrictionService,
   ],
 })
 export class AppModule {}

@@ -72,10 +72,7 @@ export class CommentService {
       await parent.save();
     }
     await this.commentMetaService.increaseExisting(commentDto, commentMeta);
-    await this.commentAbilityCheckService.sendOwnershipForSavedComment(
-      saved,
-      currentUser
-    );
+
     return this.commentMapper.toDto(saved, commentMeta, currentUser);
   }
 
@@ -168,15 +165,13 @@ export class CommentService {
 
   async deleteComment(commentId: string, currentUser: UserAuthBackendDTO) {
     const commentWillBeDeleted = await this.commentModel.findById(commentId);
-    var { allow, entityOwnership } =
-      await this.commentAbilityCheckService.checkCanDelete(
-        commentWillBeDeleted,
-        currentUser
-      );
+    var { allow } = await this.commentAbilityCheckService.checkCanDelete(
+      commentWillBeDeleted,
+      currentUser
+    );
 
     if (allow) {
       await commentWillBeDeleted.deleteOne();
-      await this.eoService.deleteOwnership(entityOwnership);
     } else {
       console.info('izin mizin yok karşim silemezsin amına koyam');
       throw new UnauthorizedException();
@@ -188,11 +183,13 @@ export class CommentService {
     newCommetn: CommentEditDTO,
     currentUser: UserAuthBackendDTO
   ): Promise<CommentDTO> {
-    var { allow, entityOwnership } =
-      await this.commentAbilityCheckService.checkCanEdit(id, currentUser);
+    const comment = await this.commentModel.findById(id);
+    var { allow } = await this.commentAbilityCheckService.checkCanEdit(
+      comment,
+      currentUser
+    );
 
     if (allow) {
-      const comment = await this.commentModel.findById(id);
       comment.textContent = newCommetn.textContent;
       comment.editCount = 1 + comment.editCount;
       comment.lastEditDate = new Date();

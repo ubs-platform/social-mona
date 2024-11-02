@@ -82,6 +82,7 @@ export interface CommentDTO {
 export interface CommentAbilityDTO {
   userCanComment: boolean;
   userCommentBlockReason: string;
+  extraNote?: string;
 }
 
 export interface CommentEditDTO {
@@ -89,7 +90,7 @@ export interface CommentEditDTO {
 }
 
 export interface CanManuplateComment {
-  entityOwnership: EntityOwnershipDTO;
+  // entityOwnership: EntityOwnershipDTO;
   allow: boolean;
 }
 
