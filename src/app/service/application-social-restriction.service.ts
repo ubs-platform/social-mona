@@ -19,8 +19,26 @@ export class ApplicationSocialRestrictionService {
   async restrictUser(
     restrictionAdd: ApplicationSocialRestrictionAddDTO
   ): Promise<ApplicationSocialRestrictionDTO> {
-    const endless = restrictionAdd.until == null;
-    const until = !endless ? new Date(restrictionAdd.until) : null;
+    let untilDateUtc: Date;
+    const dateLnth = restrictionAdd.until?.trim()?.length;
+    const endless = dateLnth == null || dateLnth == 0;
+
+    if (!endless) {
+      const date = new Date(restrictionAdd.until);
+      debugger;
+      untilDateUtc = new Date(
+        Date.UTC(
+          date.getUTCFullYear(),
+          date.getUTCMonth(),
+          date.getUTCDate(),
+          date.getUTCHours(),
+          date.getUTCMinutes(),
+          date.getUTCSeconds()
+        )
+      );
+    }
+
+    const until = untilDateUtc;
     const ovo = await this.userRestrictionDetailsRaw(restrictionAdd);
     if (ovo) {
       ovo.endless = endless;
@@ -45,28 +63,30 @@ export class ApplicationSocialRestrictionService {
   async userRestrictionDetailsRaw(
     restrictionSearch: ApplicationSocialRestrictionSearchDTO
   ) {
-    const now = new Date();
-
-    return await this.restrictionModel.findOne({
+    await this.cleanExpired();
+    console.info(new Date());
+    const data = await this.restrictionModel.findOne({
       userId: restrictionSearch.userId,
       restriction: restrictionSearch.restriction,
-      $or: [{ endless: true }, { until: { $gte: now } }],
+      $or: [{ endless: true }, { until: { $gte: new Date() } }],
     });
+    console.info(data);
+    return data;
   }
 
-  cleanExpired() {
-    const now = new Date();
-    this.restrictionModel.deleteMany({
-      endless: false,
-      until: { $lt: now },
-    });
+  async cleanExpired() {
+    console.info(
+      await this.restrictionModel.deleteMany({
+        endless: { $eq: false },
+        until: { $lt: new Date() },
+      })
+    );
   }
 
   // Kullanıcının yorum yapma engelinin olup olmadığını kontrol etme
   async userRestrictionDetails(
     restrictionSearch: ApplicationSocialRestrictionSearchDTO
   ): Promise<ApplicationSocialRestrictionDTO> {
-    await this.cleanExpired();
     const restriction = await this.userRestrictionDetailsRaw(restrictionSearch);
     return this.toDto(restriction);
   }
