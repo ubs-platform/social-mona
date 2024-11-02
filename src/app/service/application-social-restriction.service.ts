@@ -104,7 +104,7 @@ export class ApplicationSocialRestrictionService {
         userId: restriction.userId,
         restriction: restriction.restriction,
         endless: restriction.endless,
-        until: restriction.until.toISOString(),
+        until: restriction.until?.toISOString(),
         note: restriction.note,
       } as ApplicationSocialRestrictionDTO;
     } else {
