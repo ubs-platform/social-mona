@@ -1,15 +1,28 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApplicationSocialRestrictionSearchDTO,
   ApplicationSocialRestrictionAddDTO,
 } from 'libs/common/src';
 import { ApplicationSocialRestrictionService } from '../service/application-social-restriction.service';
+import { JwtAuthGuard } from '@ubs-platform/users-mona-microservice-helper';
+import { RolesGuard, Roles } from '@ubs-platform/users-mona-roles';
+import { ModeratorRole } from '../consts/role-consts';
 
 @Controller('application-social-restriction')
 export class ApplicationSocialRestrictionController {
   constructor(private srs: ApplicationSocialRestrictionService) {}
 
   @Get('admin/:userId/:restriction')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles([ModeratorRole])
   async restrictionDetail(
     @Param() search: ApplicationSocialRestrictionSearchDTO
   ) {
@@ -22,12 +35,16 @@ export class ApplicationSocialRestrictionController {
   }
 
   @Post('admin')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles([ModeratorRole])
   async addRestriction(@Body() p: ApplicationSocialRestrictionAddDTO) {
     // debugger;
     return await this.srs.restrictUser(p);
   }
 
   @Delete('admin/:userId/:restriction')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles([ModeratorRole])
   async removeRestriction(@Param() p: ApplicationSocialRestrictionSearchDTO) {
     return await this.srs.removeCommentRestriction(p);
   }
