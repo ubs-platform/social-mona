@@ -1,0 +1,1 @@
+[ { "name": "@ubs-platform/social-common", "directory": "./libs/common", "relativeDependencyLength": 0 }, { "name": "@ubs-sample-backend-mona/source", "directory": ".", "relativeDependencyLength": 0 } ]
