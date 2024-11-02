@@ -23,7 +23,7 @@ export class ApplicationSocialRestrictionController {
 
   @Post('admin')
   async addRestriction(@Body() p: ApplicationSocialRestrictionAddDTO) {
-    debugger;
+    // debugger;
     return await this.srs.restrictUser(p);
   }
 
