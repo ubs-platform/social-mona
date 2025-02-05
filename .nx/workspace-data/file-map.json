@@ -1,0 +1,464 @@
+{
+  "version": "6.0",
+  "nxVersion": "20.4.0",
+  "pathMappings": {},
+  "nxJsonPlugins": [
+    {
+      "name": "@nx/webpack/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview"
+      }
+    },
+    {
+      "name": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      }
+    },
+    {
+      "name": "@nx/jest/plugin",
+      "options": {
+        "targetName": "test"
+      }
+    }
+  ],
+  "fileMap": {
+    "nonProjectFiles": [],
+    "projectFileMap": {
+      "e2e": [
+        {
+          "file": "e2e/.eslintrc.json",
+          "hash": "9385762170273022520"
+        },
+        {
+          "file": "e2e/jest.config.ts",
+          "hash": "10195560446221006073"
+        },
+        {
+          "file": "e2e/project.json",
+          "hash": "7470009935492085477"
+        },
+        {
+          "file": "e2e/src/server/server.spec.ts",
+          "hash": "4747019362565984448",
+          "deps": [
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "e2e/src/support/global-setup.ts",
+          "hash": "14688124112638150235"
+        },
+        {
+          "file": "e2e/src/support/global-teardown.ts",
+          "hash": "10856769668484651558"
+        },
+        {
+          "file": "e2e/src/support/test-setup.ts",
+          "hash": "9379448616442792630",
+          "deps": [
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "e2e/tsconfig.json",
+          "hash": "8499526883202715106"
+        },
+        {
+          "file": "e2e/tsconfig.spec.json",
+          "hash": "17514012667061082414"
+        }
+      ],
+      "@ubs-platform/social-common": [
+        {
+          "file": "libs/common/.eslintrc.json",
+          "hash": "16896711999632553762"
+        },
+        {
+          "file": "libs/common/.gitignore",
+          "hash": "3009140142791806673"
+        },
+        {
+          "file": "libs/common/.npmignore",
+          "hash": "5757530111306764031"
+        },
+        {
+          "file": "libs/common/README.md",
+          "hash": "15804930911921094087"
+        },
+        {
+          "file": "libs/common/jest.config.ts",
+          "hash": "3800868997630387241"
+        },
+        {
+          "file": "libs/common/package-lock.json",
+          "hash": "9240196228511626083"
+        },
+        {
+          "file": "libs/common/package.json",
+          "hash": "2898439189163361237",
+          "deps": [
+            "npm:typescript",
+            "npm:@types/node",
+            "npm:tslib"
+          ]
+        },
+        {
+          "file": "libs/common/src/index.ts",
+          "hash": "14039074910458299276"
+        },
+        {
+          "file": "libs/common/src/lib/dto/application-social-restriction.dto.ts",
+          "hash": "17147648234827051165"
+        },
+        {
+          "file": "libs/common/src/lib/dto/base/search-result.dto.ts",
+          "hash": "12352410157672790313"
+        },
+        {
+          "file": "libs/common/src/lib/dto/comment.dto.ts",
+          "hash": "11397987991623272926",
+          "deps": [
+            "npm:@ubs-platform/users-common"
+          ]
+        },
+        {
+          "file": "libs/common/src/lib/dto/index.ts",
+          "hash": "918901877663934505"
+        },
+        {
+          "file": "libs/common/tsconfig.json",
+          "hash": "15885261154100728701"
+        },
+        {
+          "file": "libs/common/tsconfig.lib.json",
+          "hash": "18155349116525859334"
+        },
+        {
+          "file": "libs/common/tsconfig.spec.json",
+          "hash": "11550347367511341917"
+        }
+      ],
+      "ubs-sample-backend-mona": [
+        {
+          "file": ".env",
+          "hash": "5531018209539825988"
+        },
+        {
+          "file": ".eslintignore",
+          "hash": "7663861978715868291"
+        },
+        {
+          "file": ".eslintrc.json",
+          "hash": "14951236348575524399"
+        },
+        {
+          "file": ".gitignore",
+          "hash": "16877376182141465221"
+        },
+        {
+          "file": ".hcgrt-temp.json",
+          "hash": "17781052401328116900"
+        },
+        {
+          "file": ".prettierignore",
+          "hash": "16448050467312557263"
+        },
+        {
+          "file": ".prettierrc",
+          "hash": "16267754514737964994"
+        },
+        {
+          "file": ".vscode/extensions.json",
+          "hash": "4934098906304722861"
+        },
+        {
+          "file": "Dockerfile",
+          "hash": "3649393125207920534"
+        },
+        {
+          "file": "README.md",
+          "hash": "16918604589718850194"
+        },
+        {
+          "file": "infrastructure/docker-compose.yml",
+          "hash": "5881151938488231015"
+        },
+        {
+          "file": "jest.config.ts",
+          "hash": "2457784776920235633"
+        },
+        {
+          "file": "jest.preset.js",
+          "hash": "4185368808439573122",
+          "deps": [
+            "npm:@nx/jest"
+          ]
+        },
+        {
+          "file": "libs/const/constants.ts",
+          "hash": "5254353828740209625"
+        },
+        {
+          "file": "nohup.out",
+          "hash": "13710851311557193221"
+        },
+        {
+          "file": "nx.json",
+          "hash": "9611113771578258298"
+        },
+        {
+          "file": "package-lock.json",
+          "hash": "12396940905695948587"
+        },
+        {
+          "file": "package.json",
+          "hash": "17054843830360465252",
+          "deps": [
+            "npm:@nestjs/schematics",
+            "npm:@nestjs/testing",
+            "npm:@nx/eslint",
+            "npm:@nx/eslint-plugin",
+            "npm:@nx/jest",
+            "npm:@nx/js",
+            "npm:@nx/nest",
+            "npm:@nx/node",
+            "npm:@nx/web",
+            "npm:@nx/webpack",
+            "npm:@nx/workspace",
+            "npm:@swc-node/register",
+            "npm:@swc/core",
+            "npm:@swc/helpers",
+            "npm:@types/jest",
+            "npm:@types/node",
+            "npm:@typescript-eslint/eslint-plugin",
+            "npm:@typescript-eslint/parser",
+            "npm:eslint",
+            "npm:eslint-config-prettier",
+            "npm:jest",
+            "npm:jest-environment-node",
+            "npm:nx",
+            "npm:prettier",
+            "npm:ts-jest",
+            "npm:ts-node",
+            "npm:typescript",
+            "npm:webpack-cli",
+            "npm:@nestjs/common",
+            "npm:@nestjs/core",
+            "npm:@nestjs/jwt",
+            "npm:@nestjs/microservices",
+            "npm:@nestjs/mongoose",
+            "npm:@nestjs/passport",
+            "npm:@nestjs/platform-express",
+            "npm:@nestjs/serve-static",
+            "npm:@ubs-platform/nest-microservice-setup-util",
+            "npm:@ubs-platform/users-common",
+            "npm:@ubs-platform/users-mona-microservice-helper",
+            "npm:@ubs-platform/users-mona-roles",
+            "npm:axios",
+            "npm:kafkajs",
+            "npm:mongoose",
+            "npm:passport",
+            "npm:passport-jwt",
+            "npm:passport-local",
+            "npm:reflect-metadata",
+            "npm:rxjs",
+            "npm:tslib"
+          ]
+        },
+        {
+          "file": "project.json",
+          "hash": "17948075438609982419"
+        },
+        {
+          "file": "release-tool.sh",
+          "hash": "7026252044257423777"
+        },
+        {
+          "file": "sample.env",
+          "hash": "7584516435494287180"
+        },
+        {
+          "file": "src/app/app.module.ts",
+          "hash": "8995006319316239784",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@ubs-platform/users-mona-microservice-helper",
+            "npm:mongoose",
+            "npm:@nestjs/mongoose",
+            "npm:@nestjs/microservices",
+            "npm:@ubs-platform/nest-microservice-setup-util"
+          ]
+        },
+        {
+          "file": "src/app/consts/role-consts.ts",
+          "hash": "6742348344314111741"
+        },
+        {
+          "file": "src/app/controller/application-social-restrictions.controller.ts",
+          "hash": "7240479855690187740",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@ubs-platform/users-mona-microservice-helper",
+            "npm:@ubs-platform/users-mona-roles"
+          ]
+        },
+        {
+          "file": "src/app/controller/comment-admin.controller.ts",
+          "hash": "11180266375334856810",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@ubs-platform/users-mona-microservice-helper",
+            "npm:@ubs-platform/users-common",
+            "npm:@ubs-platform/users-mona-roles"
+          ]
+        },
+        {
+          "file": "src/app/controller/comment.controller.ts",
+          "hash": "11083506419870069180",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@ubs-platform/users-mona-microservice-helper",
+            "npm:@ubs-platform/users-common"
+          ]
+        },
+        {
+          "file": "src/app/guard/UserIntercept.ts",
+          "hash": "27024788216645520",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/passport"
+          ]
+        },
+        {
+          "file": "src/app/mapper/comment.mapper.ts",
+          "hash": "9483442392629867019",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@ubs-platform/users-common",
+            "npm:rxjs",
+            "npm:@ubs-platform/users-mona-microservice-helper",
+            "npm:mongoose"
+          ]
+        },
+        {
+          "file": "src/app/model/application-social-restriction.ts",
+          "hash": "16784469387039713198",
+          "deps": [
+            "npm:@nestjs/mongoose"
+          ]
+        },
+        {
+          "file": "src/app/model/comment-meta.ts",
+          "hash": "13312947930488411291",
+          "deps": [
+            "npm:@nestjs/mongoose"
+          ]
+        },
+        {
+          "file": "src/app/model/comment-total-cache-map.ts",
+          "hash": "12523619888928932645"
+        },
+        {
+          "file": "src/app/model/comment.ts",
+          "hash": "13561043426553137458",
+          "deps": [
+            "npm:@nestjs/mongoose"
+          ]
+        },
+        {
+          "file": "src/app/model/reaction.ts",
+          "hash": "10337227029295442800",
+          "deps": [
+            "npm:@nestjs/mongoose"
+          ]
+        },
+        {
+          "file": "src/app/service/application-social-restriction.service.ts",
+          "hash": "18252957696284471131",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/mongoose",
+            "npm:mongoose"
+          ]
+        },
+        {
+          "file": "src/app/service/comment-ability-check.service.ts",
+          "hash": "14052997449387981892",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:mongoose",
+            "npm:@ubs-platform/users-common",
+            "npm:@ubs-platform/users-mona-microservice-helper",
+            "npm:@nestjs/mongoose",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "src/app/service/comment-meta.service.ts",
+          "hash": "13685285399863261369",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:mongoose",
+            "npm:@nestjs/mongoose",
+            "npm:@ubs-platform/users-mona-microservice-helper",
+            "npm:@ubs-platform/users-common"
+          ]
+        },
+        {
+          "file": "src/app/service/comment.service.ts",
+          "hash": "15642240882312110986",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:mongoose",
+            "npm:@ubs-platform/users-common",
+            "npm:@ubs-platform/users-mona-microservice-helper",
+            "npm:@nestjs/mongoose"
+          ]
+        },
+        {
+          "file": "src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/main.ts",
+          "hash": "3772647722610968790",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/core",
+            "npm:@ubs-platform/nest-microservice-setup-util"
+          ]
+        },
+        {
+          "file": "tsconfig.app.json",
+          "hash": "1842881405182272678"
+        },
+        {
+          "file": "tsconfig.json",
+          "hash": "18125503499711032313"
+        },
+        {
+          "file": "tsconfig.spec.json",
+          "hash": "713132797739782072"
+        },
+        {
+          "file": "ubs-mona-release.sh",
+          "hash": "11775164174953617570"
+        },
+        {
+          "file": "webpack.config.js",
+          "hash": "4474135713150902299",
+          "deps": [
+            "npm:@nx/webpack"
+          ]
+        },
+        {
+          "file": "yarn.lock",
+          "hash": "5391862311724023865"
+        }
+      ]
+    }
+  }
+}
